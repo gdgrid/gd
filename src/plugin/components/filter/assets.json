@@ -1,18 +1,10 @@
 {
-  "built-head": {
-    "src": [],
-    "copy": []
-  },
-  "built-end": {
-    "src": [],
-    "copy": []
-  },
-  "head": {
-    "src": [],
-    "copy": []
-  },
-  "bottom": {
-    "src": [],
-    "copy": []
-  }
+  "built-head": [
+  ],
+  "built-end": [
+  ],
+  "head": [],
+  "bottom": [],
+  "copy": [
+  ]
 }
