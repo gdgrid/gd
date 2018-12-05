@@ -81,12 +81,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     $table->disableEmbedPlugin('pagination');
 
-    $table->setProviderItems($items)->setCell('image', function($data)
-    {
-        return '<img src="' . $data->image . '" />';
-    });
-
-    # Can Format the table cell contents:
+    # Can Format the table cells content value:
     #
     # $table->setFormatAll(['truncate' => 5]);
     # $table->formatter()->mergeFormats([['strtoupper', []]]);
@@ -94,6 +89,11 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
     #     [['name', 'email'], ['trim', 'strip_tags']],
     #     ['character', ['strip_html']],
     # ]);
+
+    $table->setProviderItems($items)->setCell('image', function($data)
+    {
+        return '<img src="' . $data->image . '" />';
+    });
 
     echo $table->render();
 

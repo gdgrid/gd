@@ -13,9 +13,6 @@
 
 namespace gdgrid\gd\bundle
 {
-
-    use Exception;
-
     /**
      * show off @property, @property-read, @property-write
      * */
@@ -33,7 +30,5 @@ namespace gdgrid\gd\bundle
         }
 
         abstract function dispatch();
-
-        abstract function build(string $source);
     }
 }

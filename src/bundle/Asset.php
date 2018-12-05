@@ -36,7 +36,7 @@ namespace gdgrid\gd\bundle
         {
             $build = array_flip($this->build);
 
-            $ex = $push = [];
+            $err = $push = [];
 
             foreach (array_merge($this->build, $this->sources) as $item)
             {
@@ -54,7 +54,7 @@ namespace gdgrid\gd\bundle
                     }
                     catch (Exception $e)
                     {
-                        $ex[] = $item . ' (' . $e->getMessage() . ');';
+                        $err[] = $item . ' (' . $e->getMessage() . ');';
                     }
 
                     continue;
@@ -65,9 +65,9 @@ namespace gdgrid\gd\bundle
                     $push[$item] = $path;
             }
 
-            if (sizeof($ex))
+            if (sizeof($err))
 
-                throw new Exception(sprintf("Asset Compiler: couldn`t compile some sources:\r\n%s", join("\r\n", $ex)));
+                throw new Exception(sprintf("Asset Compiler: couldn`t compile some sources:\r\n%s", join("\r\n", $err)));
 
             return $push;
         }
