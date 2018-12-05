@@ -1,9 +1,11 @@
-######################################################################################
-# This is an example of what you put in your plugin manifest.json config file;
+#************************************************************************#
+# This is an example of what you put in your plugin`s "manifest.json" config file;
+# You must place it on your plugin`s base folder in json format;
+
 # require - determines which php version or php packages the current plugin work with;
 # require-js - determines which js libraries the current plugin work with;
 # require-css - determines which css libraries the current plugin work with;
-######################################################################################
+#************************************************************************#
 
 {
   "name": "Plugin Name",

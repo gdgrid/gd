@@ -1,7 +1,7 @@
 {
   "name": "Paginate",
   "version": "1.0.0",
-  "description": "The Grid-Data items paginate plugin.",
+  "description": "The Grid-Data paginate plugin.",
   "homepage": "https://github.com/gdgrid/gd",
   "keywords": [],
   "authors": [
