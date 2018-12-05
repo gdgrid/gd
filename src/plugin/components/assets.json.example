@@ -18,7 +18,7 @@
     "js/plugin-3.js"
   ],
   "head": [],
-  "bottom": [],
+  "end": [],
   "copy": [
     "js-lib/*.js",
     "css-lib/*.css"
