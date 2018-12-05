@@ -1,0 +1,17 @@
+{
+  "name": "Filter",
+  "version": "1.0.0",
+  "description": "The Grid-Data Table filtering plugin.",
+  "homepage": "https://github.com/gdgrid/gd",
+  "keywords": [],
+  "authors": [
+    {
+      "name": "GD Lab",
+      "email": "dev.gdgrid@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/gdgrid/gd/issues"
+  }
+}

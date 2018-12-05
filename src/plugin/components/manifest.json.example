@@ -1,0 +1,42 @@
+######################################################################################
+# This is an example of what you put in your plugin manifest.json config file;
+# require - determines which php version or php packages the current plugin work with;
+# require-js - determines which js libraries the current plugin work with;
+# require-css - determines which css libraries the current plugin work with;
+######################################################################################
+
+{
+  "name": "Plugin Name",
+  "version": "1.0.0",
+  "description": "Description",
+  "homepage": "https://github.com/...",
+  "keywords": [],
+  "authors": [
+    {
+      "name": "author name",
+      "email": "author.email@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/.../issues"
+  },
+  "require": {
+    "php": ">=7.1.0",
+    "phpunit/phpunit": "^6.2"
+  },
+  "require-js": {
+    {
+      "lib": "jquery", "version": "3.3.1", "src": [
+        "js/jquery.min.js"
+      ]
+    }
+  },
+  "require-css": {
+    {
+      "lib": "bootstrap", "version": "3.0", "src": [
+        "css/bootstrap.min.css"
+      ]
+    }
+  }
+}
