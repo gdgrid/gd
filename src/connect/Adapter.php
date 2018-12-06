@@ -22,6 +22,8 @@ namespace gdgrid\gd\connect
     {
         private $connector;
 
+        private static $capture;
+
         abstract function fetchConnector(): IConnector;
 
         private function setConnector(IConnector $connector)
@@ -36,11 +38,31 @@ namespace gdgrid\gd\connect
             return $this->connector;
         }
 
+        private function callConnector(Adapter $class, string $m, array $arg = [])
+        {
+            if ($m === 'setConnector')
+            {
+                $class->setConnector($arg[0]->attachAdapter($class));
+
+                return $class->connector();
+            }
+
+            $class->setConnector($class->fetchConnector()->attachAdapter($class));
+
+            return call_user_func_array([$class->connector(), $m], $arg);
+        }
+
+
+
         public static function __callStatic(string $m, array $arg = [])
         {
             /* @var $class Adapter */
 
             $call = get_called_class();
+
+            if ($m === 'capture' && false == isset(static::$capture[$call]))
+
+                static::$capture[$call] = new $call;
 
             $class = new $call;
 
