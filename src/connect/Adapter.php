@@ -49,7 +49,7 @@ namespace gdgrid\gd\connect
 
             if (null === $this->connector())
 
-                $this->setConnector($this->fetchConnector()->attachAdapter($this));
+                $this->setConnector($this->fetchConnector()->attachAdapter($this)->init());
 
             return call_user_func_array([$this->connector(), $m], $arg);
         }
@@ -67,7 +67,7 @@ namespace gdgrid\gd\connect
 
             if ($m === 'capture')
             {
-                if (false == isset(static::$capture[$call]))
+                if (empty(static::$capture[$call]))
 
                     static::$capture[$call] = new $call;
 

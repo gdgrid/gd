@@ -33,7 +33,7 @@ namespace gdgrid\gd\connect\connectors
 
         protected $sources;
 
-        public function __construct()
+        public function init()
         {
             $this->assetDir();
 
@@ -74,11 +74,7 @@ namespace gdgrid\gd\connect\connectors
 
         public function addSources(string $target, string $key, array $sources)
         {
-            if (false == isset($this->sources[$target]))
-
-                $this->sources[$target] = [];
-
-            $this->sources[$target][$key] = $sources;
+            null == $this->sources ? $this->sources = [] : $this->sources[$target][$key] = $sources;
 
             $this->target = $target;
 
@@ -113,7 +109,7 @@ namespace gdgrid\gd\connect\connectors
 
         public function headCombine(array $filterKeys = [])
         {
-            $this->adapter()->combine($this->sources()['head'], $filterKeys);
+            $this->adapter()->combineSources($this->sources()['head'], $filterKeys);
 
             $this->target = 'head';
 
@@ -122,7 +118,7 @@ namespace gdgrid\gd\connect\connectors
 
         public function endCombine(array $filterKeys = [])
         {
-            $this->adapter()->combine($this->sources()['end'], $filterKeys);
+            $this->adapter()->combineSources($this->sources()['end'], $filterKeys);
 
             $this->target = 'end';
 

@@ -25,14 +25,14 @@ namespace gdgrid\gd\connect\connectors
     {
         private $adapter;
 
-        public function attachAdapter(Adapter $adapter): IConnector
+        final function attachAdapter(Adapter $adapter): IConnector
         {
             $this->adapter = $adapter;
 
             return $this;
         }
 
-        public function adapter(): Adapter
+        final function adapter(): Adapter
         {
             return $this->adapter;
         }

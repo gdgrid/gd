@@ -102,7 +102,7 @@ namespace gdgrid\gd\bundle
 
         public function push(string $source, bool $replace = false)
         {
-            $basePath = '/' . ltrim(str_replace(['/', '\\'], '/', str_replace(dirname($source), '', $source)), '/');
+            $basePath = '/' . ltrim(str_replace('\\', '/', str_replace(dirname($source), '', $source)), '/');
 
             $targetPath = $this->assetDir . $basePath;
 

@@ -42,25 +42,41 @@ namespace gdgrid\gd\connect
 
         public function fetchSources()
         {
-            return null;
+            $sources = [];
+
+            foreach (glob(GridPlugin::DIR_COMPONENTS . '*') as $dir)
+            {
+                $dir = str_replace('\\', '/', $dir);
+
+                if (false == is_file($dir . '/assets.json'))
+
+                    continue;
+
+                $sources[substr($dir, 0, strrpos($dir, '/'))] = json_decode(file_get_contents($dir . '/assets.json'), true) ?: [];
+            }
+
+            return $this->dispathSources($sources);
+        }
+
+        public function dispathSources(array $sources)
+        {
+
         }
 
         public function filterSources(array $sources, array $filterKeys = [])
         {
-            if ($filter = array_flip($filter))
+            $filter = array_flip($filterKeys);
 
-                $this->sources['head'] = array_filter($this->sources()['head'], function($key) use ($filter)
-                {
-                    return isset($filter[$key]);
+            $sources = array_filter($sources, function($key) use ($filter)
+            {
+                return isset($filter[$key]);
 
-                }, ARRAY_FILTER_USE_KEY);
+            }, ARRAY_FILTER_USE_KEY);
 
-            else $this->sources['head'] = $this->sources()['head'];
-
-            $this->target = 'head';
+            return $sources;
         }
 
-        public function combine(array $sources, array $filterKeys = [])
+        public function combineSources(array $sources, array $filterKeys = [])
         {
 
         }
