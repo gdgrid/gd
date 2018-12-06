@@ -13,12 +13,18 @@
 
 namespace gdgrid\gd\connect
 {
+
     use gdgrid\gd\connect\connectors\AssetConnector;
     use gdgrid\gd\bundle\Asset as AssetBundle;
     use gdgrid\gd\plugin\GridPlugin;
 
     class Asset extends Adapter
     {
+        protected $sources = [
+            'head' => [],
+            'end'  => [],
+        ];
+
         public function fetchConnector(): IConnector
         {
             return new AssetConnector;
@@ -37,6 +43,26 @@ namespace gdgrid\gd\connect
         public function fetchSources()
         {
             return null;
+        }
+
+        public function filterSources(array $sources, array $filterKeys = [])
+        {
+            if ($filter = array_flip($filter))
+
+                $this->sources['head'] = array_filter($this->sources()['head'], function($key) use ($filter)
+                {
+                    return isset($filter[$key]);
+
+                }, ARRAY_FILTER_USE_KEY);
+
+            else $this->sources['head'] = $this->sources()['head'];
+
+            $this->target = 'head';
+        }
+
+        public function combine(array $sources, array $filterKeys = [])
+        {
+
         }
     }
 }

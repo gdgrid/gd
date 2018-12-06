@@ -32,7 +32,7 @@ namespace gdgrid\gd\connect\connectors
             return $this;
         }
 
-        public function getAdapter(): Adapter
+        public function adapter(): Adapter
         {
             return $this->adapter;
         }

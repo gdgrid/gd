@@ -22,7 +22,7 @@ namespace gdgrid\gd\connect
     {
         private $connector;
 
-        private static $capture;
+        private static $capture = [];
 
         abstract function fetchConnector(): IConnector;
 
@@ -38,21 +38,26 @@ namespace gdgrid\gd\connect
             return $this->connector;
         }
 
-        private function callConnector(Adapter $class, string $m, array $arg = [])
+        private function callConnector(string $m, array $arg = [])
         {
             if ($m === 'setConnector')
             {
-                $class->setConnector($arg[0]->attachAdapter($class));
+                $this->setConnector($arg[0]->attachAdapter($this));
 
-                return $class->connector();
+                return $this->connector();
             }
 
-            $class->setConnector($class->fetchConnector()->attachAdapter($class));
+            if (null === $this->connector())
 
-            return call_user_func_array([$class->connector(), $m], $arg);
+                $this->setConnector($this->fetchConnector()->attachAdapter($this));
+
+            return call_user_func_array([$this->connector(), $m], $arg);
         }
 
-
+        public function __call(string $m, array $arg = [])
+        {
+            return $this->callConnector($m, $arg);
+        }
 
         public static function __callStatic(string $m, array $arg = [])
         {
@@ -60,22 +65,18 @@ namespace gdgrid\gd\connect
 
             $call = get_called_class();
 
-            if ($m === 'capture' && false == isset(static::$capture[$call]))
-
-                static::$capture[$call] = new $call;
-
-            $class = new $call;
-
-            if ($m === 'setConnector')
+            if ($m === 'capture')
             {
-                $class->setConnector($arg[0]->attachAdapter($class));
+                if (false == isset(static::$capture[$call]))
 
-                return $class->connector();
+                    static::$capture[$call] = new $call;
+
+                return static::$capture[$call];
             }
 
-            $class->setConnector($class->fetchConnector()->attachAdapter($class));
+            return isset(static::$capture[$call])
 
-            return call_user_func_array([$class->connector(), $m], $arg);
+                ? static::$capture[$call]->callConnector($m, $arg) : (new $call)->callConnector($m, $arg);
         }
     }
 }

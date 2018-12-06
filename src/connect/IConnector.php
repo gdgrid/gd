@@ -17,6 +17,6 @@ namespace gdgrid\gd\connect
     {
         public function attachAdapter(Adapter $adapter): IConnector;
     
-        public function getAdapter(): Adapter;
+        public function adapter(): Adapter;
     }
 }
