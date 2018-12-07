@@ -125,7 +125,7 @@ namespace gdgrid\gd\bundle
             return self::getJsCompiler()->squeeze(
                 $data,
                 true,   // singleLine
-                false,   // keepImportantComments
+                false,  // keepImportantComments
                 false   // specialVarRx
             );
         }

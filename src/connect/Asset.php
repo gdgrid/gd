@@ -18,8 +18,15 @@ namespace gdgrid\gd\connect
     use gdgrid\gd\bundle\Asset as AssetBundle;
     use gdgrid\gd\plugin\GridPlugin;
 
+    /**
+     * show off @property, @property-read, @property-write
+     * @method static AssetConnector head();
+     * @method static AssetConnector end();
+     * */
     class Asset extends Adapter
     {
+        use TAdapter;
+
         protected $sources = [
             'head' => [],
             'end'  => [],
@@ -58,9 +65,14 @@ namespace gdgrid\gd\connect
             return $this->dispathSources($sources);
         }
 
-        public function dispathSources(array $sources)
+        protected function dispathSources(array $sources)
         {
+            $build = [];
 
+            foreach ($sources as $source)
+            {
+
+            }
         }
 
         public function filterSources(array $sources, array $filterKeys = [])

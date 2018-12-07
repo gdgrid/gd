@@ -1,6 +1,6 @@
 <?php
 /**
- * Class GridAdapter
+ * Class GridConnector
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -23,19 +23,7 @@ namespace gdgrid\gd\connect\connectors
      * */
     class GridConnector implements IConnector
     {
-        private $adapter;
-
-        final function attachAdapter(Adapter $adapter): IConnector
-        {
-            $this->adapter = $adapter;
-
-            return $this;
-        }
-
-        final function adapter(): Adapter
-        {
-            return $this->adapter;
-        }
+        use TConnector;
 
         public function table()
         {

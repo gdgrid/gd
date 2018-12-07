@@ -49,6 +49,8 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     <?php
 
+    dd(\gdgrid\gd\connect\Asset::store());
+
     $t = microtime(true);
 
     $dataProvider = (new GridDataProvider($provider))

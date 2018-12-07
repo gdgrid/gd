@@ -14,18 +14,17 @@
 namespace gdgrid\gd\connect\connectors
 {
 
-    use gdgrid\gd\connect\Adapter;
     use gdgrid\gd\connect\IConnector;
+
     use gdgrid\gd\connect\Asset;
-    use RuntimeException;
 
     /**
      * show off @property, @property-read, @property-write
-     * @property $adapter Asset;
+     * @property Asset $adapter;
      * */
     class AssetConnector implements IConnector
     {
-        private $adapter;
+        use TConnector;
 
         private $target;
 
@@ -35,24 +34,13 @@ namespace gdgrid\gd\connect\connectors
 
         public function init()
         {
-            $this->assetDir();
+            if (null === $this->assetDir)
 
-            $this->sources();
-        }
+                $this->assetDir = $this->adapter->getAssetDir();
 
-        final function attachAdapter(Adapter $adapter): IConnector
-        {
-            $this->adapter = $adapter;
+            if (null === $this->sources)
 
-            return $this;
-        }
-
-        /**
-         * @return Asset|Adapter
-         */
-        final function adapter(): Adapter
-        {
-            return $this->adapter;
+                $this->sources = $this->adapter->fetchSources();
         }
 
         public function setAssetDir(string $dir)
@@ -64,17 +52,17 @@ namespace gdgrid\gd\connect\connectors
 
         public function assetDir()
         {
-            return $this->assetDir ?? $this->adapter()->getAssetDir();
+            return $this->assetDir;
         }
 
         public function sources()
         {
-            return $this->sources ?? $this->adapter()->fetchSources();
+            return $this->sources;
         }
 
         public function addSources(string $target, string $key, array $sources)
         {
-            null == $this->sources ? $this->sources = [] : $this->sources[$target][$key] = $sources;
+            null == $this->sources ? $this->sources[$target] = [$key => $sources] : $this->sources[$target][$key] = $sources;
 
             $this->target = $target;
 
@@ -85,7 +73,7 @@ namespace gdgrid\gd\connect\connectors
         {
             $this->sources['head'] = sizeof($filter)
 
-                ? $this->adapter()->filterSources($this->sources()['head'], $filter)
+                ? $this->adapter->filterSources($this->sources()['head'], $filter)
 
                 : $this->sources()['head'];
 
@@ -98,7 +86,7 @@ namespace gdgrid\gd\connect\connectors
         {
             $this->sources['end'] = sizeof($filter)
 
-                ? $this->adapter()->filterSources($this->sources()['end'], $filter)
+                ? $this->adapter->filterSources($this->sources()['end'], $filter)
 
                 : $this->sources()['end'];
 
@@ -109,7 +97,7 @@ namespace gdgrid\gd\connect\connectors
 
         public function headCombine(array $filterKeys = [])
         {
-            $this->adapter()->combineSources($this->sources()['head'], $filterKeys);
+            $this->adapter->combineSources($this->sources()['head'], $filterKeys);
 
             $this->target = 'head';
 
@@ -118,7 +106,7 @@ namespace gdgrid\gd\connect\connectors
 
         public function endCombine(array $filterKeys = [])
         {
-            $this->adapter()->combineSources($this->sources()['end'], $filterKeys);
+            $this->adapter->combineSources($this->sources()['end'], $filterKeys);
 
             $this->target = 'end';
 

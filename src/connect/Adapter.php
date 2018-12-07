@@ -17,6 +17,7 @@ namespace gdgrid\gd\connect
     /**
      * show off @property, @property-read, @property-write
      * @property IConnector $connector;
+     * @method static capture();
      * */
     abstract class Adapter
     {
@@ -26,40 +27,34 @@ namespace gdgrid\gd\connect
 
         abstract function fetchConnector(): IConnector;
 
-        private function setConnector(IConnector $connector)
+        final private function setConnector(IConnector $connector)
         {
             $this->connector = $connector;
+
+            $this->connector->attachAdapter($this)->init();
 
             return $this;
         }
 
-        public function connector()
-        {
-            return $this->connector;
-        }
-
-        private function callConnector(string $m, array $arg = [])
+        final private function callConnector(string $m, array $arg = [])
         {
             if ($m === 'setConnector')
-            {
-                $this->setConnector($arg[0]->attachAdapter($this));
 
-                return $this->connector();
-            }
+                return call_user_func([$this, $m], $arg[0]);
 
-            if (null === $this->connector())
+            if (null === $this->connector)
 
-                $this->setConnector($this->fetchConnector()->attachAdapter($this)->init());
+                $this->setConnector($this->fetchConnector());
 
-            return call_user_func_array([$this->connector(), $m], $arg);
+            return call_user_func_array([$this->connector, $m], $arg);
         }
 
-        public function __call(string $m, array $arg = [])
+        final function __call(string $m, array $arg = [])
         {
             return $this->callConnector($m, $arg);
         }
 
-        public static function __callStatic(string $m, array $arg = [])
+        final static function __callStatic(string $m, array $arg = [])
         {
             /* @var $class Adapter */
 
@@ -67,16 +62,16 @@ namespace gdgrid\gd\connect
 
             if ($m === 'capture')
             {
-                if (empty(static::$capture[$call]))
+                if (empty(self::$capture[$call]))
 
-                    static::$capture[$call] = new $call;
+                    self::$capture[$call] = new $call;
 
-                return static::$capture[$call];
+                return self::$capture[$call];
             }
 
-            return isset(static::$capture[$call])
+            return isset(self::$capture[$call])
 
-                ? static::$capture[$call]->callConnector($m, $arg) : (new $call)->callConnector($m, $arg);
+                ? self::$capture[$call]->callConnector($m, $arg) : (new $call)->callConnector($m, $arg);
         }
     }
 }
