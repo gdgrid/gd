@@ -27,11 +27,6 @@ namespace gdgrid\gd\bundle
 
         private static $cssCompiler, $jsCompiler;
 
-        public function __construct(array $sources, string $assetDir)
-        {
-            parent::__construct($sources, $assetDir);
-        }
-
         public function dispatch()
         {
             $build = array_flip($this->build);

@@ -15,9 +15,11 @@ namespace gdgrid\gd\connect\connectors
 {
 
     use gdgrid\gd\connect\Adapter;
+
     use gdgrid\gd\connect\IConnector;
+
     use gdgrid\gd\GridTable;
-    
+
     /**
      * show off @property, @property-read, @property-write
      * */

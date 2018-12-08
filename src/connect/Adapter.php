@@ -17,61 +17,168 @@ namespace gdgrid\gd\connect
     /**
      * show off @property, @property-read, @property-write
      * @property IConnector $connector;
-     * @method static capture();
      * */
     abstract class Adapter
     {
+        const STORE_TIME = 60;
+
+        const STORE_MAX_TIME = 3600;
+
         private $connector;
 
         private static $capture = [];
 
+        protected $storeTime;
+
+        protected static $storeMaxTime;
+
+        final private function __construct(){ }
+
+        /**
+         * Retrieves a new instance of the current Adapter`s Connector Class.
+         *
+         * @return IConnector
+         */
         abstract function fetchConnector(): IConnector;
 
-        final private function setConnector(IConnector $connector)
+        /**
+         * Deserialize the current Adapter class from any available storage (File Cache as defaults).
+         *
+         * @return null|Adapter
+         */
+        abstract static function getStore();
+
+        /**
+         * Checks if storage time exceeds maximum allowed limit.
+         *
+         * returns "true" if outdated.
+         * @return bool
+         */
+        abstract static function checkStoreOutdated(): bool;
+
+        /**
+         * Serializes the current Adapter class and puts it in any available storage (File Cache as defaults)
+         * for a certain time, for further quick access to the already processed data.
+         *
+         * @param int $time
+         *
+         * @return mixed
+         */
+        abstract function setStore(int $time = 0);
+
+        /**
+         * @param IConnector|null $connector
+         *
+         * @return $this
+         */
+        final private function setConnector(?IConnector $connector)
         {
-            $this->connector = $connector;
+            $this->connector = $connector ?? $this->fetchConnector();
 
             $this->connector->attachAdapter($this)->init();
 
             return $this;
         }
 
-        final private function callConnector(string $m, array $arg = [])
+        /**
+         * @param int $time
+         * @param IConnector|null $connector
+         *
+         * @return $this
+         */
+        final static function store(int $time = self::STORE_TIME, IConnector $connector = null)
         {
-            if ($m === 'setConnector')
+            if (self::checkStoreOutdated())
 
-                return call_user_func([$this, $m], $arg[0]);
+                return self::restore($time, $connector);
 
-            if (null === $this->connector)
+            if (($store = static::getStore()) && $store instanceof Adapter)
 
-                $this->setConnector($this->fetchConnector());
+                return $store;
 
-            return call_user_func_array([$this->connector, $m], $arg);
+            return self::restore($time, $connector);
         }
 
-        final function __call(string $m, array $arg = [])
+        /**
+         * @param int $time
+         * @param IConnector|null $connector
+         *
+         * @return $this
+         */
+        final private static function restore(int $time = self::STORE_TIME, IConnector $connector = null)
         {
-            return $this->callConnector($m, $arg);
+            /* @var $class $this */
+
+            $call = get_called_class();
+
+            $class = new $call;
+
+            if ($connector or null === $class->connector)
+
+                $class->setConnector($connector);
+
+            $class->setStore($time);
+
+            return $class;
         }
 
-        final static function __callStatic(string $m, array $arg = [])
+        /**
+         * @return $this
+         */
+        final static function capture()
         {
             /* @var $class Adapter */
 
             $call = get_called_class();
 
-            if ($m === 'capture')
-            {
-                if (empty(self::$capture[$call]))
+            if (empty(self::$capture[$call]))
 
-                    self::$capture[$call] = new $call;
+                self::$capture[$call] = new $call;
 
-                return self::$capture[$call];
-            }
+            return self::$capture[$call];
+        }
 
-            return isset(self::$capture[$call])
+        /**
+         * @param string $m
+         * @param array $arg
+         *
+         * @return mixed
+         */
+        final private function callConnector(string $m, array $arg = [])
+        {
+            if ($m === 'setConnector')
 
-                ? self::$capture[$call]->callConnector($m, $arg) : (new $call)->callConnector($m, $arg);
+                return call_user_func_array([$this, $m], $arg);
+
+            if (null === $this->connector)
+
+                $this->setConnector(null);
+
+            return call_user_func_array([$this->connector, $m], $arg);
+        }
+
+        /**
+         * @param string $m
+         * @param array $arg
+         *
+         * @return mixed
+         */
+        final function __call(string $m, array $arg = [])
+        {
+            return $this->callConnector($m, $arg);
+        }
+
+        /**
+         * @param string $m
+         * @param array $arg
+         *
+         * @return Adapter|mixed
+         */
+        final static function __callStatic(string $m, array $arg = [])
+        {
+            $call = get_called_class();
+
+            return isset(self::$capture[$call]) ? self::$capture[$call]->callConnector($m, $arg) : (new $call)->callConnector($m, $arg);
         }
     }
 }

@@ -23,13 +23,13 @@ namespace gdgrid\gd\bundle
 
         static function get(string $key, $def = null)
         {
-            if ($file = glob(self::STORE_DIR . '/' . self::setHashName($key) . '*')[0])
+            if ($file = glob(self::STORE_DIR . '/' . self::hashName($key) . '*')[0])
             {
                 if (($due = explode('_', $file)[1] ?? 0) && $due < time())
                 {
                     unlink($file);
 
-                    return $def;
+                    return null;
                 }
 
                 return @unserialize(file_get_contents($file)) ?: $def;
@@ -40,14 +40,14 @@ namespace gdgrid\gd\bundle
 
         static function set(string $key, $value, int $time = 0)
         {
-            $hash = self::setHashName($key) . ($time ? '_' . (time() + $time) : '');
+            $hash = self::hashName($key) . ($time ? '_' . (time() + $time) : '');
 
             return file_put_contents(self::STORE_DIR . '/' . $hash, serialize($value));
         }
 
         static function delete(string $key)
         {
-            if ($file = glob(self::STORE_DIR . '/' . self::setHashName($key) . '*'))
+            if ($file = glob(self::STORE_DIR . '/' . self::hashName($key) . '*')[0])
             {
                 unset($file);
 
@@ -57,7 +57,16 @@ namespace gdgrid\gd\bundle
             return false;
         }
 
-        protected static function setHashName(string $key)
+        static function cachedAt(string $key): int
+        {
+            if ($file = glob(self::STORE_DIR . '/' . self::hashName($key) . '*')[0])
+
+                return filemtime($file);
+
+            return 0;
+        }
+
+        protected static function hashName(string $key)
         {
             return md5($key);
         }

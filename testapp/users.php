@@ -49,7 +49,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     <?php
 
-    dd(\gdgrid\gd\connect\Asset::store());
+    dd(\gdgrid\gd\connect\Asset::capture());
 
     $t = microtime(true);
 

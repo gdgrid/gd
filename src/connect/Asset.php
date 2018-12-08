@@ -27,15 +27,12 @@ namespace gdgrid\gd\connect
     {
         use TAdapter;
 
+        protected $storeTime = 60 * 10;
+
         protected $sources = [
             'head' => [],
             'end'  => [],
         ];
-
-        public function fetchConnector(): IConnector
-        {
-            return new AssetConnector;
-        }
 
         public function fetchBundle(array $sources, string $assetDir)
         {
@@ -44,7 +41,7 @@ namespace gdgrid\gd\connect
 
         public function getAssetDir()
         {
-            return getenv('DOCUMENT_ROOT') . DIRECTORY_SEPARATOR . 'gd-grid-assets';
+            return getenv('DOCUMENT_ROOT') . DIRECTORY_SEPARATOR . 'gd-assets';
         }
 
         public function fetchSources()
@@ -59,13 +56,15 @@ namespace gdgrid\gd\connect
 
                     continue;
 
-                $sources[substr($dir, 0, strrpos($dir, '/'))] = json_decode(file_get_contents($dir . '/assets.json'), true) ?: [];
+                if ($data = json_decode(file_get_contents($dir . '/assets.json'), true))
+
+                    $sources[substr(strrchr($dir, '/'), 1)] = $data;
             }
 
-            return $this->dispathSources($sources);
+            return $this->dispatch($sources);
         }
 
-        protected function dispathSources(array $sources)
+        protected function dispatch(array $sources)
         {
             $build = [];
 

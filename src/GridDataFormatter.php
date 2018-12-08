@@ -258,7 +258,7 @@ namespace gdgrid\gd
          *
          * @return string
          */
-        public static function dashName(string $name)
+        static function dashName(string $name)
         {
             return trim(strtolower(preg_replace('/([A-Z])/', '-$1', $name)), '-');
         }
@@ -271,7 +271,7 @@ namespace gdgrid\gd
          *
          * @return array
          */
-        public static function setAttribute(array $src, array $attr)
+        static function setAttribute(array $src, array $attr)
         {
             foreach ($attr as $k => $v)
             {
@@ -318,7 +318,7 @@ namespace gdgrid\gd
          *
          * @return string
          */
-        public static function getAttributes(array $src): string
+        static function getAttributes(array $src): string
         {
             $output = [];
 
