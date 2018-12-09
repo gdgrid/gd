@@ -17,9 +17,7 @@ namespace gdgrid\gd\connect
 
     class Grid extends Adapter
     {
-        public function __construct()
-        {
-        }
+        use TAdapter;
 
         public function fetchConnector(): IConnector
         {
