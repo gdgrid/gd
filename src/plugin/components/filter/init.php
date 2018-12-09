@@ -87,7 +87,7 @@ $this->fetchComponent('filter', function(GridForm $plugin)
                 'text'    => $buttons['submit']['text'] ?? 'Apply Filter',
                 'attr'    => $buttons['submit']['attr'] ?? 'class="btn btn-info btn-sm"',
                 'onclick' => $buttons['submit']['onclick']
-                    ?? strtr('gdFilterSubmit(\'%s\', \'%s\')', $id, $buttons['submit']['url'] ?? getenv('REQUEST_URI')),
+                    ?? sprintf('gdFilterSubmit(\'%s\', \'%s\')', $id, $buttons['submit']['url'] ?? getenv('REQUEST_URI')),
             ],
             'reset'  => [
                 'id'      => $buttons['submit']['id'] ?? 'grid-table-filter-reset-' . substr(md5(microtime(true)), 0, 10),
