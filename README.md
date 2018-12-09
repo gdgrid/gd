@@ -128,7 +128,7 @@ echo $table->render();
 
 ```
 
-**1. Using Data Provider.**
+**2. Using Data Provider.**
 
 ``In this case it is not neccessary to implement interfaces in your entity class.``
 
