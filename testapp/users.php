@@ -51,7 +51,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     $t = microtime(true);
 
-    //\gdgrid\gd\connect\Asset::capture();
+//    \gdgrid\gd\connect\Asset::capture();
 
     $dataProvider = (new GridDataProvider($provider))
         ->setDataProvider((new GridData)
