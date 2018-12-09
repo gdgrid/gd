@@ -42,7 +42,7 @@ namespace gdgrid\gd\connect
         abstract function fetchConnector(): IConnector;
 
         /**
-         * Deserialize the current Adapter class from any available storage (File Cache as defaults).
+         * Deserialize the current Adapter`s instance from any available storage (File Cache as defaults).
          *
          * @return null|Adapter
          */
@@ -57,7 +57,7 @@ namespace gdgrid\gd\connect
         abstract static function checkStoreOutdated(): bool;
 
         /**
-         * Serializes the current Adapter class and puts it in any available storage (File Cache as defaults)
+         * Serializes the current Adapter`s instance and puts it in any available storage (File Cache as defaults)
          * for a certain time, for further quick access to the already processed data.
          *
          * @param int $time

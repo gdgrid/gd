@@ -94,7 +94,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     $table->setProviderItems($items)->setCell('image', function($data)
     {
-        return '<img src="' . $data->image . '" />';
+        return $data->image ? '<img src="' . $data->image . '" />' : null;
     });
 
     echo $table->render();

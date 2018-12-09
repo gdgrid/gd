@@ -148,9 +148,7 @@ namespace gdgrid\gd
         {
             foreach ($keys as $key)
             {
-                if ($this->checkField($key))
-
-                    unset($this->field[$key]);
+                if ($this->checkField($key)) unset($this->field[$key]);
             }
 
             return $this;
