@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Asset
+ * Interface IAdapter
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -11,16 +11,14 @@
  * @github          https://github.com/gdgrid/gd
  */
 
-namespace gdgrid\gd\adapt
+namespace gdgrid\gd\connect
 {
-
-    use Exception;
-
-    /**
-     * show off @property, @property-read, @property-write
-     * */
-    class Asset
+    interface IConnector
     {
+        public function init();
 
+        public function attachAdapter(Adapter $adapter): IConnector;
+    
+        public function adapter(): Adapter;
     }
 }

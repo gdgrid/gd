@@ -3,7 +3,7 @@
  * @author GD Lab <dev.gdgrid@gmail.com>
  */
 
-require 'init.php';
+require_once 'init.php';
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 

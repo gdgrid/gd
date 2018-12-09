@@ -29,7 +29,7 @@ namespace gdgrid\gd
      * @property IGridDataDriver $dataDriver;
      * @property PDO $query;
      * @property PDO $pdo;
-     * @method describe(array $bind = []);
+     * @method array describe(array $bind = []);
      * */
     class GridData implements IGridData
     {

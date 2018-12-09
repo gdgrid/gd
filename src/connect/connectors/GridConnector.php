@@ -1,6 +1,6 @@
 <?php
 /**
- * Class AssetBundle
+ * Class GridConnector
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -11,24 +11,25 @@
  * @github          https://github.com/gdgrid/gd
  */
 
-namespace gdgrid\gd\bundle
+namespace gdgrid\gd\connect\connectors
 {
+
+    use gdgrid\gd\connect\Adapter;
+
+    use gdgrid\gd\connect\IConnector;
+
+    use gdgrid\gd\GridTable;
+
     /**
      * show off @property, @property-read, @property-write
      * */
-    abstract class AssetBundle
+    class GridConnector implements IConnector
     {
-        protected $sources = [];
+        use TConnector;
 
-        protected $assetDir;
-
-        public function __construct(array $sources, string $assetDir)
+        public function table()
         {
-            $this->sources = $sources;
-
-            $this->assetDir = rtrim($assetDir, '/..\\');
+            //
         }
-
-        abstract function dispatch();
     }
 }

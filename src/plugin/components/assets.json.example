@@ -2,8 +2,8 @@
 # This is an example of what you put in your plugin`s "assets.json" config file;
 # You must place it on your plugin`s base folder in json format;
 
-# built-... - a list of built (not supported for compilation) assets (the suffix -head/-end means that in what place of html document should it be placed);
-# copy - determines which files (can be masked) should be published to apropriate public folder;
+# built-... - a list of built (not supported for compilation) assets (the suffix "-head/-end" means that in what place of html document should it be placed);
+# copy - determines which files (can be masked) should be published (just copied) to apropriate public folder;
 #************************************************************************#
 
 {
@@ -18,7 +18,7 @@
     "js/plugin-3.js"
   ],
   "head": [],
-  "bottom": [],
+  "end": [],
   "copy": [
     "js-lib/*.js",
     "css-lib/*.css"

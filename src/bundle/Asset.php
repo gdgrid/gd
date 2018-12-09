@@ -27,16 +27,11 @@ namespace gdgrid\gd\bundle
 
         private static $cssCompiler, $jsCompiler;
 
-        public function __construct(array $sources, string $assetDir)
-        {
-            parent::__construct($sources, $assetDir);
-        }
-
         public function dispatch()
         {
             $build = array_flip($this->build);
 
-            $ex = $push = [];
+            $err = $push = [];
 
             foreach (array_merge($this->build, $this->sources) as $item)
             {
@@ -54,7 +49,7 @@ namespace gdgrid\gd\bundle
                     }
                     catch (Exception $e)
                     {
-                        $ex[] = $item . ' (' . $e->getMessage() . ');';
+                        $err[] = $item . ' (' . $e->getMessage() . ');';
                     }
 
                     continue;
@@ -65,9 +60,9 @@ namespace gdgrid\gd\bundle
                     $push[$item] = $path;
             }
 
-            if (sizeof($ex))
+            if (sizeof($err))
 
-                throw new Exception(sprintf("Asset Compiler: couldn`t compile some sources:\r\n%s", join("\r\n", $ex)));
+                throw new Exception(sprintf("Asset Compiler: couldn`t compile some sources:\r\n%s", join("\r\n", $err)));
 
             return $push;
         }
@@ -102,7 +97,7 @@ namespace gdgrid\gd\bundle
 
         public function push(string $source, bool $replace = false)
         {
-            $basePath = '/' . ltrim(str_replace(['/', '\\'], '/', str_replace(dirname($source), '', $source)), '/');
+            $basePath = '/' . ltrim(str_replace('\\', '/', str_replace(dirname($source), '', $source)), '/');
 
             $targetPath = $this->assetDir . $basePath;
 
@@ -125,7 +120,7 @@ namespace gdgrid\gd\bundle
             return self::getJsCompiler()->squeeze(
                 $data,
                 true,   // singleLine
-                false,   // keepImportantComments
+                false,  // keepImportantComments
                 false   // specialVarRx
             );
         }

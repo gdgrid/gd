@@ -86,19 +86,8 @@ $this->fetchComponent('filter', function(GridForm $plugin)
                 'id'      => $buttons['submit']['id'] ?? 'grid-table-filter-submit-' . substr(md5(microtime(true)), 0, 10),
                 'text'    => $buttons['submit']['text'] ?? 'Apply Filter',
                 'attr'    => $buttons['submit']['attr'] ?? 'class="btn btn-info btn-sm"',
-                'onclick' => $buttons['submit']['onclick'] ?? strtr('
-                    var parser = document.createElement(\'a\');
-                    parser.href = \'{url}\';
-                    var params = new URLSearchParams(parser.search);
-                    $(\'#{id}\').find(\'input,select\').each(function(){
-                        if ($(this).val() !== \'\') params.set($(this).attr(\'name\'), $(this).val())
-                    });
-                    window.location.href = parser.pathname + \'?\' + params.toString()
-                ',
-                        [
-                            '{id}'  => $id,
-                            '{url}' => $buttons['submit']['url'] ?? getenv('REQUEST_URI'),
-                        ]),
+                'onclick' => $buttons['submit']['onclick']
+                    ?? sprintf('gdFilterSubmit(\'%s\', \'%s\')', $id, $buttons['submit']['url'] ?? getenv('REQUEST_URI')),
             ],
             'reset'  => [
                 'id'      => $buttons['submit']['id'] ?? 'grid-table-filter-reset-' . substr(md5(microtime(true)), 0, 10),
