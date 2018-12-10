@@ -28,31 +28,31 @@ namespace gdgrid\gd\connect\connectors
 
         private $target;
 
-        protected $assetDir;
-
         protected $sources;
 
         public function init()
         {
-            if (null === $this->assetDir)
-
-                $this->assetDir = $this->adapter->getAssetDir();
-
             if (null === $this->sources)
 
                 $this->sources = $this->adapter->fetchSources();
+
+            $this->setBuildMode(getenv('REMOTE_ADDR') === '127.0.0.1');
+
+            $this->setPushDir(getenv('DOCUMENT_ROOT') . DIRECTORY_SEPARATOR . 'gd-assets');
         }
 
-        public function setAssetDir(string $dir)
+        public function setBuildMode(bool $mode)
         {
-            $this->assetDir = $dir;
+            $this->adapter->buildMode = $mode;
 
             return $this;
         }
 
-        public function assetDir()
+        public function setPushDir(string $dir)
         {
-            return $this->assetDir;
+            $this->adapter->pushDir = $dir;
+
+            return $this;
         }
 
         public function sources()

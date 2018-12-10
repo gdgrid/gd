@@ -20,15 +20,15 @@ namespace gdgrid\gd\bundle
     {
         protected $sources = [];
 
-        protected $assetDir;
-
-        public function __construct(array $sources, string $assetDir)
+        public function __construct(array $sources)
         {
             $this->sources = $sources;
-
-            $this->assetDir = rtrim($assetDir, '/..\\');
         }
 
         abstract function dispatch();
+
+        abstract function build(string $source);
+
+        abstract function push(string $source, string $pushPath);
     }
 }

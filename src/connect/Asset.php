@@ -15,7 +15,7 @@ namespace gdgrid\gd\connect
 {
 
     use gdgrid\gd\connect\connectors\AssetConnector;
-    use gdgrid\gd\bundle\Asset as AssetBundle;
+    use gdgrid\gd\bundle\AssetBuilder;
     use gdgrid\gd\plugin\GridPlugin;
 
     /**
@@ -29,51 +29,66 @@ namespace gdgrid\gd\connect
 
         protected $storeTime = 60 * 10;
 
+        public $buildMode = false;
+
+        public $pushDir;
+
         protected $sources = [
             'head' => [],
             'end'  => [],
         ];
 
-        public function fetchBundle(array $sources, string $assetDir)
-        {
-            return new AssetBundle($sources, $assetDir);
-        }
+        protected $push = [];
 
-        public function getAssetDir()
+        protected $build = [];
+
+        public function fetchAssetBuilder(array $sources)
         {
-            return getenv('DOCUMENT_ROOT') . DIRECTORY_SEPARATOR . 'gd-assets';
+            return new AssetBuilder($sources);
         }
 
         public function fetchSources()
         {
-            $sources = [];
-
             foreach (glob(GridPlugin::DIR_COMPONENTS . '*') as $dir)
             {
-                $dir = str_replace('\\', '/', $dir);
-
-                if (false == is_file($dir . '/assets.json'))
+                if (false == is_file($dir . '/assets.json') || false == is_dir($dir . '/assets'))
 
                     continue;
 
                 if ($data = json_decode(file_get_contents($dir . '/assets.json'), true))
+                {
+                    $plugin = substr(strrchr($dir, DIRECTORY_SEPARATOR), 1);
 
-                    $sources[substr(strrchr($dir, '/'), 1)] = $data;
+                    $this->sources['head'][$plugin] = [];
+
+                    if (false == empty($data['built-head']))
+
+                        $this->sources['head'][$plugin] = (array) $data['built-head'];
+
+                    if (false == empty($data['built-end']))
+
+                        $this->sources['end'][$plugin] = (array) $data['built-end'];
+
+                    if (false == empty($data['head']))
+
+                        $this->sources['head'][$plugin] = array_merge($this->sources['head'][$plugin], (array) $data['head']);
+
+                    if (false == empty($data['end']))
+
+                        $this->sources['end'][$plugin] = array_merge($this->sources['end'][$plugin], (array) $data['end']);
+
+                    $this->build($dir . '/assets', $this->sources['head'][$plugin]);
+
+                    $this->build($dir . '/assets', $this->sources['end'][$plugin]);
+                }
             }
 
-            return $this->dispatch($sources);
+            return $this->sources;
         }
 
-        protected function dispatch(array $sources)
+        protected function build(string $sourcesDir, array $sources)
         {
-            $build = [];
 
-            dd($sources);
-
-            foreach ($sources as $source)
-            {
-
-            }
         }
 
         public function filterSources(array $sources, array $filterKeys = [])

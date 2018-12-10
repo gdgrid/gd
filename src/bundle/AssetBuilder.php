@@ -14,6 +14,7 @@
 namespace gdgrid\gd\bundle
 {
 
+    use RuntimeException;
     use Exception;
     use Leafo\ScssPhp\Compiler;
     use Patchwork\JSqueeze;
@@ -21,96 +22,110 @@ namespace gdgrid\gd\bundle
     /**
      * show off @property, @property-read, @property-write
      * */
-    class Asset extends AssetBundle
+    class AssetBuilder extends AssetBundle
     {
         protected $build = [];
+
+        protected $push = [];
 
         private static $cssCompiler, $jsCompiler;
 
         public function dispatch()
         {
-            $build = array_flip($this->build);
+            $err = [];
 
-            $err = $push = [];
-
-            foreach (array_merge($this->build, $this->sources) as $item)
+            foreach (array_merge($this->build, $this->sources) as $src => $pushPath)
             {
-                if (isset($push[$item]))
+                if (isset($this->push[$src]))
 
                     continue;
 
-                if (isset($build[$item]))
+                if (isset($this->build[$src]))
                 {
                     try
                     {
-                        if (($compile = $this->build($item)) && $this->push($compile, true))
+                        if (($compile = $this->build($src)))
 
-                            $push[$item] = $compile;
+                            $this->push[$compile] = $pushPath;
                     }
                     catch (Exception $e)
                     {
-                        $err[] = $item . ' (' . $e->getMessage() . ');';
+                        $err[] = $src . ' (' . $e->getMessage() . ');';
                     }
 
                     continue;
                 }
 
-                if ($path = $this->push($item))
-
-                    $push[$item] = $path;
+                $this->push[$src] = $pushPath;
             }
 
             if (sizeof($err))
 
-                throw new Exception(sprintf("Asset Compiler: couldn`t compile some sources:\r\n%s", join("\r\n", $err)));
+                throw new RuntimeException(sprintf("Asset Compiler: can`t compile some sources: \r\n%s", join(";\r\n", $err)));
 
-            return $push;
+            return $this;
         }
 
-        public function setBuild(array $assets)
+        public function setBuild(array $sources)
         {
-            $this->build = $assets;
+            $this->build = $sources;
         }
 
         public function build(string $source)
         {
-            $build = '';
-
-            if ($info = pathinfo($source))
+            if ($contents = file_get_contents($source))
             {
-                $build = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . '.build.' . $info['extension'];
+                $ext = substr(strrchr($source, '.'), 1);
 
-                switch ($info['extension'])
+//                if (false == is_file($sourcePath))
+//
+//                    return false;
+//
+//                $path = substr($pushPath, 0, strrpos($pushPath, '.'));
+//
+//                $ext = substr(strrchr($pushPath, '.'), 1);
+//
+//                $modify = filemtime($sourcePath);
+//
+//                $fetchPath = $path . '.' . $modify . ($ext ? '.' . $ext : '');
+//
+//                return false == is_file($fetchPath) ? $fetchPath : false;
+
+                switch ($ext)
                 {
                     case 'css':
                     case 'scss':
                     case 'less':
-                        file_put_contents($build, $this->compileCss(file_get_contents($source)));
+                        return $this->compileCss($contents);
                         break;
                     case 'js':
-                        file_put_contents($build, $this->compileJs(file_get_contents($source)));
+                        return $this->compileJs($contents);
                 }
             }
 
-            return $build;
+            return '';
         }
 
-        public function push(string $source, bool $replace = false)
+        public function push(string $source, string $pushPath)
         {
-            $basePath = '/' . ltrim(str_replace('\\', '/', str_replace(dirname($source), '', $source)), '/');
+            $err = [];
 
-            $targetPath = $this->assetDir . $basePath;
-
-            $pathDir = substr($targetPath, 0, strrpos($targetPath, '/'));
-
-            is_dir($pathDir) or mkdir($pathDir, 0777, true);
-
-            if ($replace ? rename($source, $targetPath) : copy($source, $targetPath))
+            foreach ($this->push as $src => $push)
             {
-                chmod($targetPath, 0755);
+                $pushPathDir = substr(str_replace('\\', '/', $push), 0, strrpos($push, '/'));
 
-                return $basePath;
+                is_dir($pushPathDir) or mkdir($pushPathDir, 0777, true);
+
+                if (copy($src, $push))
+
+                    chmod($push, 0755);
+
+                else $err[] = $src;
             }
+
+            if (sizeof($err))
+
+                throw new RuntimeException(sprintf("Asset Pushier: Can`t copy some sources: \r\n%s", join(";\r\n", $err)));
 
             return false;
         }
