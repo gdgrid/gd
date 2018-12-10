@@ -68,6 +68,8 @@ namespace gdgrid\gd\connect
         {
             $build = [];
 
+            dd($sources);
+
             foreach ($sources as $source)
             {
 

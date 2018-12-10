@@ -11,9 +11,7 @@ namespace gdgrid\gd\connect
     {
         public function fetchConnector(): IConnector
         {
-            $conn =  __CLASS__ . 'Connector';
-
-            require_once 'connectors' . DIRECTORY_SEPARATOR . $conn . '.php';
+            $conn =  '\\gdgrid\\gd\\connect\\connectors\\' . substr(strrchr(__CLASS__, "\\"), 1) . 'Connector';
 
             return new $conn;
         }
