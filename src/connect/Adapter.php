@@ -104,13 +104,14 @@ namespace gdgrid\gd\connect
          */
         final static function store(int $time = self::STORE_TIME, IConnector $connector = null)
         {
-            if (self::checkStoreOutdated())
-
-                return self::restore($time, $connector);
-
             if (($store = static::getStore()) && $store instanceof Adapter)
+            {
+                if (self::checkStoreOutdated())
+
+                    return self::restore($time, $connector);
 
                 return $store;
+            }
 
             return self::restore($time, $connector);
         }
