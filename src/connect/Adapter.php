@@ -24,29 +24,29 @@ namespace gdgrid\gd\connect
 
         const STORE_MAX_TIME = 3600;
 
-        /*
+        /**
          * The current Adapter`s Connector instance, retrieved by the "fetchConnector()" method.
-         * */
+         */
         private $connector;
 
-        /*
+        /**
          * The static method "capture()" of the current Adapter, creates a single instance of the current object
          * and stores it in the "$capture" property.
-         * */
+         */
         private static $capture = [];
 
-        /*
+        /**
          * The current Adapter`s instance time to store in seconds.
-         * */
+         */
         protected $storeTime;
 
-        /*
+        /**
          * The maximum allowable storage time for the current instance of the Adapter, after which it is recreated.
-         * */
+         */
         protected static $storeMaxTime;
 
         /**
-         * Adapter constructor deprecated, make all initializations in the Connector`s method "init" instead.
+         * Adapter constructor deprecated, make all initializations in the Connector`s "init" method instead.
          */
         final private function __construct(){ }
 
