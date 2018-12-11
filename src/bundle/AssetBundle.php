@@ -27,8 +27,8 @@ namespace gdgrid\gd\bundle
 
         abstract function dispatch();
 
-        abstract function build(string $source);
+        abstract function compile(string $source);
 
-        abstract function push(string $source, string $pushPath);
+        abstract function push();
     }
 }

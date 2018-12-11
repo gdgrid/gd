@@ -22,7 +22,7 @@ namespace gdgrid\gd\bundle
     /**
      * show off @property, @property-read, @property-write
      * */
-    class AssetBuilder extends AssetBundle
+    class AssetBuild extends AssetBundle
     {
         protected $build = [];
 
@@ -30,11 +30,26 @@ namespace gdgrid\gd\bundle
 
         private static $cssCompiler, $jsCompiler;
 
+        /**
+         * @param array $sources
+         *
+         * @return AssetBuild
+         */
+        public function setBuild(array $sources)
+        {
+            $this->build = $sources;
+
+            return $this;
+        }
+
+        /**
+         * @return AssetBuild
+         */
         public function dispatch()
         {
             $err = [];
 
-            foreach (array_merge($this->build, $this->sources) as $src => $pushPath)
+            foreach (array_merge($this->build, $this->sources) as $src => $push)
             {
                 if (isset($this->push[$src]))
 
@@ -44,9 +59,9 @@ namespace gdgrid\gd\bundle
                 {
                     try
                     {
-                        if (($compile = $this->build($src)))
+                        if ($compile = $this->compile($src))
 
-                            $this->push[$compile] = $pushPath;
+                            $this->push[$compile] = $push;
                     }
                     catch (Exception $e)
                     {
@@ -56,7 +71,7 @@ namespace gdgrid\gd\bundle
                     continue;
                 }
 
-                $this->push[$src] = $pushPath;
+                $this->push[$src] = $push;
             }
 
             if (sizeof($err))
@@ -66,47 +81,30 @@ namespace gdgrid\gd\bundle
             return $this;
         }
 
-        public function setBuild(array $sources)
+        public function compile(string $source)
         {
-            $this->build = $sources;
-        }
+            $compile = '';
 
-        public function build(string $source)
-        {
-            if ($contents = file_get_contents($source))
+            if ($info = pathinfo($source))
             {
-                $ext = substr(strrchr($source, '.'), 1);
+                $compile = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . '.min.' . $info['extension'];
 
-//                if (false == is_file($sourcePath))
-//
-//                    return false;
-//
-//                $path = substr($pushPath, 0, strrpos($pushPath, '.'));
-//
-//                $ext = substr(strrchr($pushPath, '.'), 1);
-//
-//                $modify = filemtime($sourcePath);
-//
-//                $fetchPath = $path . '.' . $modify . ($ext ? '.' . $ext : '');
-//
-//                return false == is_file($fetchPath) ? $fetchPath : false;
-
-                switch ($ext)
+                switch ($info['extension'])
                 {
                     case 'css':
                     case 'scss':
                     case 'less':
-                        return $this->compileCss($contents);
+                        file_put_contents($compile, $this->compileCss(file_get_contents($source)));
                         break;
                     case 'js':
-                        return $this->compileJs($contents);
+                        file_put_contents($compile, $this->compileJs(file_get_contents($source)));
                 }
             }
 
-            return '';
+            return $compile;
         }
 
-        public function push(string $source, string $pushPath)
+        public function push()
         {
             $err = [];
 
@@ -117,8 +115,11 @@ namespace gdgrid\gd\bundle
                 is_dir($pushPathDir) or mkdir($pushPathDir, 0777, true);
 
                 if (copy($src, $push))
+                {
+                    chmod($pushPathDir, 0755);
 
                     chmod($push, 0755);
+                }
 
                 else $err[] = $src;
             }

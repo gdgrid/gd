@@ -32,20 +32,18 @@ namespace gdgrid\gd\connect\connectors
 
         public function init()
         {
+            $this->setPushDir(getenv('DOCUMENT_ROOT') . DIRECTORY_SEPARATOR . 'gd-assets');
+
             if (null === $this->sources)
 
                 $this->sources = $this->adapter->fetchSources();
-
-            $this->setBuildMode(getenv('REMOTE_ADDR') === '127.0.0.1');
-
-            $this->setPushDir(getenv('DOCUMENT_ROOT') . DIRECTORY_SEPARATOR . 'gd-assets');
         }
 
-        public function setBuildMode(bool $mode)
+        public function build()
         {
-            $this->adapter->buildMode = $mode;
+            $this->adapter->buildMode = true;
 
-            return $this;
+            $this->adapter->fetchSources();
         }
 
         public function setPushDir(string $dir)
@@ -113,13 +111,18 @@ namespace gdgrid\gd\connect\connectors
             return $this;
         }
 
-        public function get(string $view = 'render/asset-connector.php')
+        public function get(string $view = 'render/asset/sources.php')
         {
             ob_start();
 
             include $view;
 
             return ob_get_clean();
+        }
+
+        public function __toString()
+        {
+            return $this->get();
         }
 
         public function __destruct()
