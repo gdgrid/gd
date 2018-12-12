@@ -18,25 +18,12 @@ namespace gdgrid\gd\connect
 
     /**
      * show off @property, @property-read, @property-write
-     * @property AssetBuild $builder;
      * */
     class AssetCollect
     {
         protected $push = [];
 
         protected $build = [];
-
-        protected $builder;
-
-        /**
-         * @param array $sources
-         *
-         * @return AssetBuild
-         */
-        public function fetchAssetBuilder(array $sources)
-        {
-            return $this->builder ?? new AssetBuild($sources);
-        }
 
         public function setPush(string $sourcesDir, string $pushDir, array $sources)
         {
@@ -97,7 +84,7 @@ namespace gdgrid\gd\connect
 
             $info = pathinfo($source);
 
-            $pushDir = substr(str_replace('\\', '/', $push), 0, strrpos($push, '/')) . '/';
+            $pushDir = substr($push, 0, strrpos($push, DIRECTORY_SEPARATOR)) . '/';
 
             if (false == is_file($pushDir . $info['filename'] . '.' . $modify . '.' . $info['extension']))
 
@@ -108,7 +95,7 @@ namespace gdgrid\gd\connect
 
         public function build()
         {
-            $this->fetchAssetBuilder($this->push)->setBuild($this->build)->dispatch()->push();
+            (new AssetBuild($this->push))->setBuild($this->build)->dispatch()->push();
         }
     }
 }

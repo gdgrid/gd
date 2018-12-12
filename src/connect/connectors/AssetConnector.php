@@ -32,7 +32,7 @@ namespace gdgrid\gd\connect\connectors
 
         public function init()
         {
-            $this->setPushDir(getenv('DOCUMENT_ROOT') . DIRECTORY_SEPARATOR . 'gd-assets');
+            $this->setPushDir(getenv('DOCUMENT_ROOT') . '/gd-assets');
 
             if (null === $this->sources)
 
@@ -44,6 +44,8 @@ namespace gdgrid\gd\connect\connectors
             $this->adapter->buildMode = true;
 
             $this->adapter->fetchSources();
+
+            $this->adapter->fetchCollector()->build();
         }
 
         public function setPushDir(string $dir)

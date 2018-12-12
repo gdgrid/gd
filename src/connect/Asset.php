@@ -46,7 +46,7 @@ namespace gdgrid\gd\connect
         {
             $this->sources = ['head' => [], 'end' => []];
 
-            foreach (glob(GridPlugin::DIR_COMPONENTS . '*') as $dir)
+            foreach (glob(GridPlugin::getDirComponents() . '*') as $dir)
             {
                 if (false == is_file($dir . '/assets.json') || false == is_dir($dir . '/assets'))
 
@@ -58,57 +58,44 @@ namespace gdgrid\gd\connect
 
                     $this->sources['head'][$plugin] = $this->sources['end'][$plugin] = [];
 
-                    if (false == empty($data['built-head']))
+                    $this->allocate($this->sources['head'][$plugin], $dir . '/assets', (array) ($data['built-head'] ?? []), true);
 
-                        $this->sources['head'][$plugin] = $this->setPush($dir . '/assets', $this->pushDir, (array) $data['built-head']);
+                    $this->allocate($this->sources['end'][$plugin], $dir . '/assets', (array) ($data['built-end'] ?? []), true);
 
-                    if (false == empty($data['built-end']))
+                    $this->allocate($this->sources['head'][$plugin], $dir . '/assets', (array) ($data['head'] ?? []));
 
-                        $this->sources['end'][$plugin] = $this->setPush($dir . '/assets', $this->pushDir, (array) $data['built-end']);
+                    $this->allocate($this->sources['end'][$plugin], $dir . '/assets', (array) ($data['end'] ?? []));
 
-                    if (false == empty($data['head']))
-
-                        $this->sources['head'][$plugin] = array_merge(
-                            $this->sources['head'][$plugin],
-                            $this->setBuild($dir . '/assets', $this->pushDir, (array) $data['head'])
-                        );
-
-                    if (false == empty($data['end']))
-
-                        $this->sources['end'][$plugin] = array_merge(
-                            $this->sources['end'][$plugin],
-                            $this->setBuild($dir . '/assets', $this->pushDir, (array) $data['end'])
-                        );
-
-                    if (false == empty($data['copy']) && $this->buildMode)
+                    if ($this->buildMode && false == empty($data['copy']))
 
                         $this->fetchCollector()->copy($dir . '/assets', $this->pushDir, (array) $data['copy']);
                 }
             }
 
-            dd($this->sources);
-
-            if ($this->buildMode)
-
-                $this->fetchCollector()->build();
-
             return $this->sources;
         }
 
-        protected function setBuild(string $sourcesDir, string $pushDir, array $sources)
+        protected function allocate(array & $data, string $srcDir, array $sources, bool $push = false)
+        {
+            $data = $push ? array_merge($data, $this->setPush($srcDir, $this->pushDir, $sources))
+
+                : array_merge($data, $this->setBuild($srcDir, $this->pushDir, $sources));
+        }
+
+        protected function setBuild(string $srcDir, string $pushDir, array $sources)
         {
             if ($this->buildMode)
 
-                return $this->fetchCollector()->setBuild($sourcesDir, $pushDir, $sources);
+                return $this->fetchCollector()->setBuild($srcDir, $pushDir, $sources);
 
             return $sources;
         }
 
-        protected function setPush(string $sourcesDir, string $pushDir, array $sources)
+        protected function setPush(string $srcDir, string $pushDir, array $sources)
         {
             if ($this->buildMode)
 
-                return $this->fetchCollector()->setPush($sourcesDir, $pushDir, $sources);
+                return $this->fetchCollector()->setPush($srcDir, $pushDir, $sources);
 
             return $sources;
         }
