@@ -45,6 +45,7 @@ namespace gdgrid\gd
          * GridDataProvider constructor.
          *
          * @param object $entity
+         * @throws \Exception
          */
         public function __construct($entity)
         {

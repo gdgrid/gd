@@ -80,7 +80,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     # Can Disable the Embed Plugin components:
     #
-    # $table->disableEmbedPlugins();
+    #   $table->disableEmbedPlugins();
 
     $table->disableEmbedPlugin('pagination');
 

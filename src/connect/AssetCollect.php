@@ -39,7 +39,7 @@ namespace gdgrid\gd\connect
         {
             for ($i = 0; $i < sizeof($sources); ++$i)
             {
-                $sources[$i] = '/' . trim($sources[$i], '/..\\');
+                $sources[$i] = '/' . str_replace('\\', '/', $sources[$i]);
 
                 if ($path = $this->fetchPushPath($sourcesDir . $sources[$i], $pushDir . $sources[$i]))
 
@@ -53,7 +53,7 @@ namespace gdgrid\gd\connect
         {
             for ($i = 0; $i < sizeof($sources); ++$i)
             {
-                if ($glob = glob($sourcesDir . '/' . ltrim($sources[$i], '/..\\')))
+                if ($glob = glob($sourcesDir . '/' . str_replace('\\', '/', $sources[$i])))
                 {
                     for ($ii = 0; $ii < sizeof($glob); ++$ii)
                     {

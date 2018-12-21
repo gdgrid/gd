@@ -255,7 +255,7 @@ namespace gdgrid\gd\plugin
 
         static function getDirComponents()
         {
-            return trim(static::$dirComponents, '/..\\') . '/';
+            return trim(str_replace('\\', '/', static::$dirComponents), '/') . '/';
         }
     }
 }

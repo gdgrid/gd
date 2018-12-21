@@ -46,6 +46,8 @@ namespace gdgrid\gd\connect\connectors
             $this->adapter->fetchSources();
 
             $this->adapter->fetchCollector()->build();
+
+            return $this;
         }
 
         public function setPushDir(string $dir)
