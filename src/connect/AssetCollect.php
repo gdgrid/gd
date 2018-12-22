@@ -39,7 +39,7 @@ namespace gdgrid\gd\connect
         {
             for ($i = 0; $i < sizeof($sources); ++$i)
             {
-                $sources[$i] = '/' . str_replace('\\', '/', $sources[$i]);
+                $sources[$i] = '/' . trim(str_replace('\\', '/', $sources[$i]), '/');
 
                 if ($path = $this->fetchPushPath($sourcesDir . $sources[$i], $pushDir . $sources[$i]))
 
@@ -84,7 +84,7 @@ namespace gdgrid\gd\connect
 
             $info = pathinfo($source);
 
-            $pushDir = substr($push, 0, strrpos($push, DIRECTORY_SEPARATOR)) . '/';
+            $pushDir = substr($push, 0, strrpos($push, '/')) . '/';
 
             if (false == is_file($pushDir . $info['filename'] . '.' . $modify . '.' . $info['extension']))
 
@@ -95,6 +95,8 @@ namespace gdgrid\gd\connect
 
         public function build()
         {
+            dump($this->push, $this->build);
+
             (new AssetBuild($this->push))->setBuild($this->build)->dispatch()->push();
         }
     }

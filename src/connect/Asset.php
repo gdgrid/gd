@@ -58,13 +58,13 @@ namespace gdgrid\gd\connect
 
                     $this->sources['head'][$plugin] = $this->sources['end'][$plugin] = [];
 
-                    $this->allocate($this->sources['head'][$plugin], $dir . '/assets', (array) ($data['built-head'] ?? []), true);
+                    $this->setBuild($this->sources['head'][$plugin], $dir . '/assets', (array) ($data['built-head'] ?? []));
 
-                    $this->allocate($this->sources['end'][$plugin], $dir . '/assets', (array) ($data['built-end'] ?? []), true);
+                    $this->setBuild($this->sources['end'][$plugin], $dir . '/assets', (array) ($data['built-end'] ?? []));
 
-                    $this->allocate($this->sources['head'][$plugin], $dir . '/assets', (array) ($data['head'] ?? []));
+                    $this->setPush($this->sources['head'][$plugin], $dir . '/assets', (array) ($data['head'] ?? []));
 
-                    $this->allocate($this->sources['end'][$plugin], $dir . '/assets', (array) ($data['end'] ?? []));
+                    $this->setPush($this->sources['end'][$plugin], $dir . '/assets', (array) ($data['end'] ?? []));
 
                     if ($this->buildMode && false == empty($data['copy']))
 
@@ -75,29 +75,18 @@ namespace gdgrid\gd\connect
             return $this->sources;
         }
 
-        protected function allocate(array & $data, string $srcDir, array $sources, bool $push = false)
+        protected function setPush(array & $data, string $srcDir, array $sources)
         {
-            $data = $push ? array_merge($data, $this->setPush($srcDir, $this->pushDir, $sources))
+            $data = array_merge($data, $this->buildMode
 
-                : array_merge($data, $this->setBuild($srcDir, $this->pushDir, $sources));
+                ? $this->fetchCollector()->setPush($srcDir, $this->pushDir, $sources) : $sources);
         }
 
-        protected function setBuild(string $srcDir, string $pushDir, array $sources)
+        protected function setBuild(array & $data, string $srcDir, array $sources)
         {
-            if ($this->buildMode)
+            $data = array_merge($data, $this->buildMode
 
-                return $this->fetchCollector()->setBuild($srcDir, $pushDir, $sources);
-
-            return $sources;
-        }
-
-        protected function setPush(string $srcDir, string $pushDir, array $sources)
-        {
-            if ($this->buildMode)
-
-                return $this->fetchCollector()->setPush($srcDir, $pushDir, $sources);
-
-            return $sources;
+                ? $this->fetchCollector()->setBuild($srcDir, $this->pushDir, $sources) : $sources);
         }
 
         public function filterSources(array $sources, array $filterKeys = [])
