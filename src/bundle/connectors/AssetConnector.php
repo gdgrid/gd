@@ -16,11 +16,8 @@ namespace gdgrid\gd\bundle\connectors
 
     use gdgrid\gd\bundle\IConnector;
 
-    use gdgrid\gd\bundle\Asset;
-
     /**
      * show off @property, @property-read, @property-write
-     * @property Asset $adapter;
      * */
     class AssetConnector implements IConnector
     {

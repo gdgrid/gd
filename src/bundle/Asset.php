@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Grid
+ * Class Asset
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -13,7 +13,7 @@
 
 namespace gdgrid\gd\bundle
 {
-    class Grid extends Adapter
+    class Asset extends Adapter
     {
         use TAdapter;
     }
