@@ -1,6 +1,6 @@
 <?php
 /**
- * Class AssetAdapter
+ * Class AssetConnector
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
