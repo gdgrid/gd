@@ -11,24 +11,16 @@
  * @github          https://github.com/gdgrid/gd
  */
 
-namespace gdgrid\gd\bundle
+namespace gdgrid\gd\plugin
 {
+
+    use Exception;
+
     /**
      * show off @property, @property-read, @property-write
      * */
-    abstract class AssetBundle
+    class AssetBundle
     {
-        protected $sources = [];
-
-        protected $assetDir;
-
-        public function __construct(array $sources, string $assetDir)
-        {
-            $this->sources = $sources;
-
-            $this->assetDir = rtrim($assetDir, '/..\\');
-        }
-
-        abstract function dispatch();
+    
     }
 }

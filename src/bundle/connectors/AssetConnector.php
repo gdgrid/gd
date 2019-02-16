@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Grid
+ * Class AssetAdapter
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -11,17 +11,19 @@
  * @github          https://github.com/gdgrid/gd
  */
 
-namespace gdgrid\gd\connect
+namespace gdgrid\gd\bundle\connectors
 {
-    use gdgrid\gd\connect\connectors\GridConnector;
 
-    class Grid extends Adapter
+    use gdgrid\gd\bundle\IConnector;
+
+    use gdgrid\gd\bundle\Asset;
+
+    /**
+     * show off @property, @property-read, @property-write
+     * @property Asset $adapter;
+     * */
+    class AssetConnector implements IConnector
     {
-        use TAdapter;
-
-        public function fetchConnector(): IConnector
-        {
-            return new GridConnector;
-        }
+        use TConnector;
     }
 }

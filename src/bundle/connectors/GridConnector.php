@@ -11,12 +11,12 @@
  * @github          https://github.com/gdgrid/gd
  */
 
-namespace gdgrid\gd\connect\connectors
+namespace gdgrid\gd\bundle\connectors
 {
 
-    use gdgrid\gd\connect\Adapter;
+    use gdgrid\gd\bundle\Adapter;
 
-    use gdgrid\gd\connect\IConnector;
+    use gdgrid\gd\bundle\IConnector;
 
     use gdgrid\gd\GridTable;
 

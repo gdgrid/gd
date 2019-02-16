@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface IAdapter
+ * Class Grid
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -11,14 +11,10 @@
  * @github          https://github.com/gdgrid/gd
  */
 
-namespace gdgrid\gd\connect
+namespace gdgrid\gd\bundle
 {
-    interface IConnector
+    class Grid extends Adapter
     {
-        public function init();
-
-        public function attachAdapter(Adapter $adapter): IConnector;
-    
-        public function adapter(): Adapter;
+        use TAdapter;
     }
 }

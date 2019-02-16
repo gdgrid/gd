@@ -11,7 +11,7 @@
  * @github          https://github.com/gdgrid/gd
  */
 
-namespace gdgrid\gd\connect
+namespace gdgrid\gd\bundle
 {
 
     /**

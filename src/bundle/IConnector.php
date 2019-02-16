@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Asset
+ * Interface IAdapter
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -13,17 +13,12 @@
 
 namespace gdgrid\gd\bundle
 {
-
-    use gdgrid\gd\bundle\connectors\AssetConnector;
-    use gdgrid\gd\plugin\GridPlugin;
-
-    /**
-     * show off @property, @property-read, @property-write
-     * @method static AssetConnector head();
-     * @method static AssetConnector end();
-     * */
-    class Asset extends Adapter
+    interface IConnector
     {
-        use TAdapter;
+        public function init();
+
+        public function attachAdapter(Adapter $adapter): IConnector;
+    
+        public function adapter(): Adapter;
     }
 }

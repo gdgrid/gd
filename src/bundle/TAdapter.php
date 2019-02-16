@@ -1,6 +1,6 @@
 <?php
 
-namespace gdgrid\gd\connect
+namespace gdgrid\gd\bundle
 {
     use gdgrid\gd\bundle\Cache;
 
