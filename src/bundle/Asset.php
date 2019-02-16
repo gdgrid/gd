@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Asset
+ * Class Grid
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -13,16 +13,7 @@
 
 namespace gdgrid\gd\bundle
 {
-
-    use gdgrid\gd\bundle\connectors\AssetConnector;
-    use gdgrid\gd\plugin\GridPlugin;
-
-    /**
-     * show off @property, @property-read, @property-write
-     * @method static AssetConnector head();
-     * @method static AssetConnector end();
-     * */
-    class Asset extends Adapter
+    class Grid extends Adapter
     {
         use TAdapter;
     }

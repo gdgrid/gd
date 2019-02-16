@@ -46,7 +46,7 @@ namespace gdgrid\gd\bundle
         protected static $storeMaxTime;
 
         /**
-         * Adapter constructor deprecated, make all initializations in the Connector`s "init" method instead.
+         * Adapter constructor blocked, make all initializations in the Connector`s "init" method instead.
          */
         final private function __construct(){ }
 
@@ -104,14 +104,13 @@ namespace gdgrid\gd\bundle
          */
         final static function store(int $time = self::STORE_TIME, IConnector $connector = null)
         {
-            if (($store = static::getStore()) && $store instanceof Adapter)
-            {
-                if (self::checkStoreOutdated())
+            if (self::checkStoreOutdated())
 
-                    return self::restore($time, $connector);
+                return self::restore($time, $connector);
+
+            if (($store = static::getStore()) && $store instanceof Adapter)
 
                 return $store;
-            }
 
             return self::restore($time, $connector);
         }

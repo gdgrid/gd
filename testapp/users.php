@@ -8,6 +8,7 @@ use gdgrid\gd\GridDataProvider;
 use gdgrid\gd\GridData;
 use gdgrid\gd\GridForm;
 use Illuminate\Http\Request;
+use gdgrid\gd\connect\Asset;
 
 $provider = new User;
 
@@ -42,6 +43,8 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
             margin: 20px 5px 20px 0
         }
     </style>
+
+    <?= Asset::capture()->build()->head() ?>
 </head>
 <body>
 <div class="container">
@@ -50,8 +53,6 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
     <?php
 
     $t = microtime(true);
-
-    //\gdgrid\gd\connect\Asset::capture()->head();
 
     $dataProvider = (new GridDataProvider($provider))
         ->setDataProvider((new GridData)
@@ -79,7 +80,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     # Can Disable the Embed Plugin components:
     #
-    # $table->disableEmbedPlugins();
+    #   $table->disableEmbedPlugins();
 
     $table->disableEmbedPlugin('pagination');
 

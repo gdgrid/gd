@@ -24,8 +24,6 @@ namespace gdgrid\gd\plugin
      * */
     class GridPlugin implements IGridPlugin
     {
-        const DIR_COMPONENTS = __DIR__ . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR;
-
         protected $components = [];
 
         protected $gridObject;
@@ -39,6 +37,8 @@ namespace gdgrid\gd\plugin
         protected $initPath = [];
 
         protected $fetched = [];
+
+        protected static $dirComponents = __DIR__ . '/components/';
 
         public function __construct(array $components, Grid $instance)
         {
@@ -109,9 +109,11 @@ namespace gdgrid\gd\plugin
             return $paramName ? $this->config[$componentName][$paramName] : ($this->config[$componentName] ?? []);
         }
 
-        public function checkConfig(string $componentName, string $paramName)
+        public function checkConfig(string $componentName, string $paramName): bool
         {
-            return (empty($this->config[$componentName]) || false == array_key_exists($paramName, $this->config[$componentName])) ? false : true;
+            return (empty($this->config[$componentName])
+
+                || false == array_key_exists($paramName, $this->config[$componentName])) ? false : true;
         }
 
         public function setData(string $componentName, array $data)
@@ -241,9 +243,19 @@ namespace gdgrid\gd\plugin
         {
             return $componentName
 
-                ? ($this->initPath[$componentName] ?? static::DIR_COMPONENTS . $componentName . DIRECTORY_SEPARATOR . 'init.php')
+                ? ($this->initPath[$componentName] ?? static::getDirComponents() . $componentName . '/init.php')
 
                 : $this->initPath;
+        }
+
+        static function setDirComponents(string $dir)
+        {
+            static::$dirComponents = $dir;
+        }
+
+        static function getDirComponents()
+        {
+            return trim(str_replace('\\', '/', static::$dirComponents), '/') . '/';
         }
     }
 }

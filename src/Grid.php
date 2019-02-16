@@ -28,7 +28,7 @@ namespace gdgrid\gd
     {
         const NO_DATA = '(no data)';
 
-        const RENDER_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'render';
+        const RENDER_DIR = __DIR__ . '/render';
 
         protected $provider;
 
@@ -478,15 +478,13 @@ namespace gdgrid\gd
 
         public function render()
         {
-            if (null !== $this->plugin)
+            if (null !== $this->plugin || sizeof($this->embedPlugins))
 
                 $this->plugin()->fetchComponents();
 
             ob_start();
 
-            include($this->getRenderPath()
-
-                ?? static::RENDER_DIR . DIRECTORY_SEPARATOR . $this->renderSubDir . DIRECTORY_SEPARATOR . $this->renderSubDirPath);
+            include($this->getRenderPath() ?? static::RENDER_DIR . '/' . $this->renderSubDir . '/' . $this->renderSubDirPath);
 
             return ob_get_clean();
         }
