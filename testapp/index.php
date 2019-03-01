@@ -26,7 +26,9 @@ Route::get('/delete/{id}', function($id)
 
         $user->delete();
 
-    return Redirect::to('/');
+    header('Location:/');
+
+    exit;
 });
 
 Route::get('/create', function()
@@ -67,7 +69,9 @@ Route::post('/create', function()
     {
         $provider->save();
 
-        return Redirect::to('/');
+        header('Location:/');
+
+        exit;
     }
 
     include 'form.php';
@@ -93,7 +97,9 @@ Route::post('/update/{id}', function($id)
     {
         $provider->save();
 
-        return Redirect::to('/');
+        header('Location:/');
+
+        exit;
     }
 
     include 'form.php';
