@@ -292,13 +292,19 @@ namespace gdgrid\gd
          * Example: bindLayout('{some-key}', ['<template></template>', null, '</{tag}>']) - insert template after tag;
          *
          * @param string $bindKey
-         * @param array|callable $data
+         * @param array $data
          *
          * @return $this
          */
-        public function bindLayout(string $bindKey, $data)
+        public function bindLayout(string $bindKey, array $data)
         {
-            $this->bindLayout[$bindKey] = $data;
+            if (false == isset($this->getLayoutBindings()[$bindKey]))
+                
+                $this->bindLayout[$bindKey] = $data;
+            
+            elseif (empty($this->bindLayout[$bindKey][0]) && isset($data[0]))
+                
+                $this->bindLayout[$bindKey][0] = $data[0];
 
             return $this;
         }

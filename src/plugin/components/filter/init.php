@@ -27,8 +27,10 @@ $this->fetchComponent('filter', function(GridForm $plugin)
     if (empty($plugin->getSortOrder()))
 
         $plugin->setSortOrder($this->gridObject()->fetchSortOrder());
+    
+    $templateSet = null !== $plugin->getTemplate();
 
-    if ($this->gridObject()->getTag() === 'table' && null === $plugin->getTemplate() && $plugin->getTag() === 'form')
+    if ($this->gridObject()->getTag() === 'table' && ! $templateSet)
     {
         $plugin->setTag('tr')->setTagAttributes([])->setTemplate('<td {attr}>{input}</td>');
 
@@ -111,7 +113,7 @@ $this->fetchComponent('filter', function(GridForm $plugin)
                 $btn['reset']['attr'], $btn['reset']['id'], $btn['reset']['onclick'], $btn['reset']['text'])
         ]);
 
-        if (false == isset($plugin->getTagAttributes()['onkeydown']))
+        if (false == isset($plugin->getTagAttributes()['onkeydown']) && ! $templateSet)
 
             $plugin->setTagAttributes([
                 'onkeydown' => sprintf('if (event.keyCode === 13) $(\'#%s\').trigger(\'click\')', $btn['submit']['id'])
