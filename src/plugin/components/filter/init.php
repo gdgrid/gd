@@ -1,6 +1,7 @@
 <?php
 
 use gdgrid\gd\GridForm;
+use gdgrid\gd\Grid;
 
 /* @var \gdgrid\gd\plugin\GridPlugin $this */
 
@@ -14,7 +15,7 @@ $this->setConfig('filter', [
     ]
 ]);
 
-$this->fetchComponent('filter', function(GridForm $plugin)
+$this->fetchComponent('filter', function(GridForm $plugin, Grid $grid)
 {
     /* @var \gdgrid\gd\plugin\GridPlugin $this */
 
@@ -26,11 +27,11 @@ $this->fetchComponent('filter', function(GridForm $plugin)
 
     if (empty($plugin->getSortOrder()))
 
-        $plugin->setSortOrder($this->gridObject()->fetchSortOrder());
-    
+        $plugin->setSortOrder($grid->fetchSortOrder());
+
     $templateSet = null !== $plugin->getTemplate();
 
-    if ($this->gridObject()->getTag() === 'table' && ! $templateSet)
+    if ($grid->getTag() === 'table' && ! $templateSet)
     {
         $plugin->setTag('tr')->setTagAttributes([])->setTemplate('<td {attr}>{input}</td>');
 
@@ -43,14 +44,14 @@ $this->fetchComponent('filter', function(GridForm $plugin)
 
     foreach ($plugin->fetchSortOrder() as $item)
     {
-        if (false == $this->gridObject()->checkRow($item))
+        if (false == $grid->checkRow($item))
         {
             $plugin->unsetInput($item);
 
             continue;
         }
 
-        if (false == $plugin->checkInput($item) && $this->gridObject()->checkRow($item))
+        if (false == $plugin->checkInput($item) && $grid->checkRow($item))
         {
             $plugin->setRow($item, '');
 
@@ -119,9 +120,9 @@ $this->fetchComponent('filter', function(GridForm $plugin)
                 'onkeydown' => sprintf('if (event.keyCode === 13) $(\'#%s\').trigger(\'click\')', $btn['submit']['id'])
             ]);
 
-        $this->gridObject()->bindLayout('{filter_btn}', [$template, '<{tag}']);
+        $grid->bindLayout('{filter_btn}', [$template, '<{tag}']);
     }
 
-    $this->gridObject()->bindLayout('{filter}', [$plugin->render(), null, '{columns}']);
+    $grid->bindLayout('{filter}', [$plugin->render(), null, '{columns}']);
 
 });

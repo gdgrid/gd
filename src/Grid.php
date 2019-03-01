@@ -1,6 +1,7 @@
 <?php
 /**
  * Class Grid
+ *
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -20,9 +21,10 @@ namespace gdgrid\gd
 
     /**
      * show off @property, @property-read, @property-write
+     *
      * @property IGridProvider|GridDataProvider $provider;
-     * @property GridDataFormatter $formatter            ;
-     * @property IGridPlugin|GridPlugin $plugin          ;
+     * @property GridDataFormatter              $formatter            ;
+     * @property IGridPlugin|GridPlugin         $plugin          ;
      * */
     abstract class Grid implements IGrid
     {
@@ -124,7 +126,8 @@ namespace gdgrid\gd
 
         public function setFields(array $data)
         {
-            $this->field = array_merge($this->field, array_diff_key($data, array_flip((array) $this->getProvider()->gridSafeFields())));
+            $this->field = array_merge($this->field, array_diff_key($data, array_flip((array)$this->getProvider()
+                ->gridSafeFields())));
 
             return $this;
         }
@@ -292,19 +295,17 @@ namespace gdgrid\gd
          * Example: bindLayout('{some-key}', ['<template></template>', null, '</{tag}>']) - insert template after tag;
          *
          * @param string $bindKey
-         * @param array $data
+         * @param array  $data
          *
          * @return $this
          */
         public function bindLayout(string $bindKey, array $data)
         {
-            if (false == isset($this->getLayoutBindings()[$bindKey]))
-                
-                $this->bindLayout[$bindKey] = $data;
-            
-            elseif (empty($this->bindLayout[$bindKey][0]) && isset($data[0]))
-                
-                $this->bindLayout[$bindKey][0] = $data[0];
+            $this->bindLayout[$bindKey] = [
+                $this->bindLayout[$bindKey][0] ?? ($data[0] ?? null),
+                $this->bindLayout[$bindKey][1] ?? ($data[1] ?? null),
+                $this->bindLayout[$bindKey][2] ?? ($data[2] ?? null),
+            ];
 
             return $this;
         }

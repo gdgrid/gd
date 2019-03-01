@@ -8,6 +8,7 @@ use gdgrid\gd\GridDataProvider;
 use gdgrid\gd\GridData;
 use gdgrid\gd\GridForm;
 use Illuminate\Http\Request;
+use gdgrid\gd\Grid;
 
 $provider = new User;
 
@@ -70,7 +71,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     $table->plugin()->setConfig('bulk-actions', ['view' => false, 'set_query' => false]);
 
-    $table->plugin()->hook('filter', function(GridForm $plugin)
+    $table->plugin()->hook('filter', function(GridForm $plugin, Grid $grid)
     {
         $plugin->loadInputs()->setValues(Request::capture()->all());
     });
@@ -106,8 +107,8 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
     <br><br>
 
     <?php
-    echo '<small>Table generation time: <b>' . (microtime(true) - $t) . '</b> sec</small><br>';
-    echo '<small>Page generation time: <b>' . (microtime(true) - APP_START) . '</b> sec</small>';
+    echo '<small>Table generation time: <b>' . (microtime(true)-$t) . '</b> sec</small><br>';
+    echo '<small>Page generation time: <b>' . (microtime(true)-APP_START) . '</b> sec</small>';
     ?>
 
 </div>

@@ -13,7 +13,7 @@
 
 namespace gdgrid\gd
 {
-
+    use RuntimeException;
     use Exception;
 
     class GridDataFormatter
@@ -60,7 +60,7 @@ namespace gdgrid\gd
          * ]
          *
          * @return $this
-         * @throws Exception
+         * @throws RuntimeException
          */
         public function setFormat(array $fieldFormats)
         {
@@ -68,7 +68,7 @@ namespace gdgrid\gd
             {
                 if (false == is_array($format))
 
-                    throw new Exception('The format field parameter is not properly defined.');
+                    throw new RuntimeException('The format field parameter is not properly defined.');
 
                 $methods = [];
 
@@ -359,11 +359,17 @@ namespace gdgrid\gd
             return join("\x20", $output);
         }
 
+        /**
+         * @param string $m
+         * @param array  $args
+         * @return mixed
+         * @throws RuntimeException
+         */
         public function __call(string $m, array $args = [])
         {
             if (false == function_exists($m))
 
-                throw new Exception(sprintf('The method or function `%s` not found in `%s` class.'), $m, __CLASS__);
+                throw new RuntimeException(sprintf('The method or function `%s` not found in `%s` class.'), $m, __CLASS__);
 
             return call_user_func_array($m, array_merge([$this->value], $args));
         }

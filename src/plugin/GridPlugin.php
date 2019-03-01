@@ -13,10 +13,8 @@
 
 namespace gdgrid\gd\plugin
 {
-
     use gdgrid\gd\Grid;
-
-    use Exception;
+    use RuntimeException;
 
     /**
      * show off @property, @property-read, @property-write
@@ -128,6 +126,11 @@ namespace gdgrid\gd\plugin
             return $this->data[$componentName] ?? null;
         }
 
+        /**
+         * @param string $componentName
+         * @return mixed
+         * @throws \ReflectionException
+         */
         protected function getComponentInstance(string $componentName)
         {
             $p = [];
@@ -153,6 +156,12 @@ namespace gdgrid\gd\plugin
             return call_user_func_array([$r, 'newInstance'], $p);
         }
 
+        /**
+         * @param string   $componentName
+         * @param callable $fetch
+         * @return $this
+         * @throws \ReflectionException
+         */
         public function fetchComponent(string $componentName, callable $fetch)
         {
             if (empty($this->getComponent($componentName)) || $this->checkFetched($componentName))
@@ -167,11 +176,11 @@ namespace gdgrid\gd\plugin
             {
                 foreach ($this->hook[$componentName] as $hook)
                 {
-                    call_user_func($hook, $instance);
+                    call_user_func($hook, $instance, $this->gridObject);
                 }
             }
 
-            call_user_func($fetch, $instance);
+            call_user_func($fetch, $instance, $this->gridObject);
 
             $this->setFetched($componentName, $instance);
 
@@ -190,11 +199,17 @@ namespace gdgrid\gd\plugin
             return $this;
         }
 
+        /**
+         * @param string $componentName
+         * @param        $instance
+         * @return $this
+         * @throws RuntimeException
+         */
         public function setFetched(string $componentName, $instance)
         {
             if (false === $instance instanceof $this->components[$componentName])
 
-                throw new Exception('The plugin component instance must be a valid class object.');
+                throw new RuntimeException('The plugin component instance must be a valid class object.');
 
             $this->fetched[$componentName] = $instance;
 

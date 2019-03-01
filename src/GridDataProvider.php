@@ -13,8 +13,7 @@
 
 namespace gdgrid\gd
 {
-
-    use Exception;
+    use RuntimeException;
 
     class GridDataProvider implements IGridFormProvider, IGridTableProvider
     {
@@ -45,7 +44,7 @@ namespace gdgrid\gd
          * GridDataProvider constructor.
          *
          * @param object $entity
-         * @throws \Exception
+         * @throws RuntimeException
          */
         public function __construct($entity)
         {
@@ -71,17 +70,17 @@ namespace gdgrid\gd
          * @param object $entity
          *
          * @return $this
-         * @throws \Exception
+         * @throws RuntimeException
          */
         public function setEntity($entity)
         {
             if (false === empty($this->entity))
 
-                throw new Exception('The Entity is already set.');
+                throw new RuntimeException('The Entity is already set.');
 
             if (false === get_class($entity))
 
-                throw new Exception('The Entity is not a valid class object.');
+                throw new RuntimeException('The Entity is not a valid class object.');
 
             $this->entity = $entity;
 
@@ -112,7 +111,7 @@ namespace gdgrid\gd
         {
             if (false == array_key_exists($key, $this->data))
 
-                throw new Exception(sprintf('The data key `%s` is not found in GridDataProvider.', $key));
+                throw new RuntimeException(sprintf('The data key `%s` is not found in GridDataProvider.', $key));
         }
 
         public function setData(array $data)
