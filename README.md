@@ -192,7 +192,21 @@ $table->plugin()->hook('filter', function(GridForm $plugin)
     $plugin->loadInputs()->setValues(Request::capture()->all());
 });
 
+# Can Disable the Embedded Plugins:
+# $table->disableEmbedPlugins();
+
+# Pagination disabled. To enable it, you must specify quantity of records
+# in the "totalCount" configuration parameter:
+# $table->plugin()->setConfig('pagination', ['totalCount' => ???]);
 $table->disableEmbedPlugin('pagination');
+
+# Can Format the table cells content value:
+# $table->setFormatAll(['truncate' => 5]);
+# $table->formatter()->mergeFormats([['strtoupper', []]]);
+# $table->setFormat([
+#     [['name', 'email'], ['trim', 'strip_tags']],
+#     ['character', ['strip_html']],
+# ]);
 
 $table->setProviderItems($items)->setCell('image', function($data)
 {
