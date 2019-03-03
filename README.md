@@ -100,6 +100,7 @@ class User extends Eloquent implements IGridFormProvider, IGridTableProvider
 ``View File:``
 
 ```php
+<?php
 
 use gdgrid\gd\GridTable;
 use gdgrid\gd\GridForm;
@@ -135,6 +136,7 @@ echo $table->render();
 ``Your model Class:``
 
 ```php
+<?php
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
@@ -154,6 +156,7 @@ class User extends Eloquent
 ``View File:``
 
 ```php
+<?php
 
 use gdgrid\gd\GridTable;
 use gdgrid\gd\GridDataProvider;
