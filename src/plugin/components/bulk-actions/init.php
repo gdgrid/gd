@@ -13,9 +13,24 @@ $this->setConfig('bulk-actions', [
     ],
     'action_field'   => 'id',
     'template'       => '{view} {update} {delete}',
-    'view'           => ['template' => null, 'url' => null, 'attr' => null, 'text' => null],
-    'update'         => ['template' => null, 'url' => null, 'attr' => null, 'text' => null],
-    'delete'         => ['template' => null, 'url' => null, 'attr' => null, 'text' => null],
+    'view'           => [
+        'template' => null,
+        'url'      => null,
+        'attr'     => null,
+        'text'     => '<i class="glyphicon glyphicon-eye-open"></i>'
+    ],
+    'update'         => [
+        'template' => null,
+        'url'      => null,
+        'attr'     => null,
+        'text'     => '<i class="glyphicon glyphicon-pencil"></i>'
+    ],
+    'delete'         => [
+        'template' => null,
+        'url'      => null,
+        'attr'     => 'onclick="if (false == confirm(\'Are you sure you want to delete this element?\')) return false"',
+        'text'     => '<i class="glyphicon glyphicon-trash"></i>'
+    ],
 ]);
 
 $this->fetchComponent('bulk-actions', function(GridTable $plugin)
@@ -28,31 +43,27 @@ $this->fetchComponent('bulk-actions', function(GridTable $plugin)
 
     $setQuery = false == empty($params['set_query']);
 
-    $template = $params['template'] ?? '{view} {update} {delete}';
+    $template = $params['template'];
 
     $actions = [
-        'view' => $params['view']['template']
-            ?? sprintf('<a href="%s%s" %s>%s</a>',
+        'view'   => $params['view']['template'] ?? sprintf('<a href="%s%s" %s>%s</a>',
                 $params['view']['url'] ?? $url . '/view',
                 $setQuery ? '?id={item_id}' : '/{item_id}',
-                $params['view']['attr'] ?? null,
-                $params['view']['text'] ?? '<i class="glyphicon glyphicon-eye-open"></i>'),
-
-        'update' => $params['update']['template']
-            ?? sprintf('<a href="%s%s" %s>%s</a>',
+                $params['view']['attr'],
+                $params['view']['text']
+            ),
+        'update' => $params['update']['template'] ?? sprintf('<a href="%s%s" %s>%s</a>',
                 $params['update']['url'] ?? $url . '/update',
                 $setQuery ? '?id={item_id}' : '/{item_id}',
-                $params['update']['attr'] ?? null,
-                $params['update']['text'] ?? '<i class="glyphicon glyphicon-pencil"></i>'),
-
-        'delete' => $params['delete']['template']
-            ?? sprintf('<a href="%s%s" %s>%s</a>',
+                $params['update']['attr'],
+                $params['update']['text']
+            ),
+        'delete' => $params['delete']['template'] ?? sprintf('<a href="%s%s" %s>%s</a>',
                 $params['delete']['url'] ?? $url . '/delete',
                 $setQuery ? '?id={item_id}' : '/{item_id}',
-                $params['delete']['attr']
-                ??
-                'onclick="if (false == confirm(\'Are you sure you want to delete this element?\')) return false"',
-                $params['delete']['text'] ?? '<i class="glyphicon glyphicon-trash"></i>'),
+                $params['delete']['attr'],
+                $params['delete']['text']
+            ),
     ];
 
     $columns = [];

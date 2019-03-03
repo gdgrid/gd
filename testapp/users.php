@@ -78,8 +78,11 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     # Can Disable the Embed Plugin components:
     #
-    #   $table->disableEmbedPlugins();
+    # $table->disableEmbedPlugins();
 
+    # Pagination disabled. To enable it, you must specify quantity of records
+    # in the "totalCount" configuration parameter:
+    # $table->plugin()->setConfig('pagination', ['totalCount' => ???]);
     $table->disableEmbedPlugin('pagination');
 
     # Can Format the table cells content value:

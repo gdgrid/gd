@@ -6,8 +6,9 @@ use gdgrid\gd\Grid;
 /* @var \gdgrid\gd\plugin\GridPlugin $this */
 
 $this->setConfig('pagination', [
-    'perPage'  => 25,
-    'pageSize' => 10,
+    'perPage'    => 25,
+    'pageSize'   => 10,
+    'totalCount' => 0,
 ]);
 
 $this->fetchComponent('pagination', function(Pagination $plugin, Grid $grid)

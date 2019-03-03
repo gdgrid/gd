@@ -15,6 +15,7 @@ namespace gdgrid\gd\plugin
 {
     use gdgrid\gd\Grid;
     use RuntimeException;
+    use logicException;
 
     /**
      * show off @property, @property-read, @property-write
@@ -129,13 +130,21 @@ namespace gdgrid\gd\plugin
         /**
          * @param string $componentName
          * @return mixed
-         * @throws \ReflectionException
+         * @throws RuntimeException
+         * @throws logicException
          */
         protected function getComponentInstance(string $componentName)
         {
-            $p = [];
+            try
+            {
+                $r = new \ReflectionClass($this->components[$componentName]);
+            }
+            catch (\Exception $e)
+            {
+                throw new RuntimeException(sprintf('The plugin component "%s" is not a valid class.', $this->components[$componentName]));
+            }
 
-            $r = new \ReflectionClass($this->components[$componentName]);
+            $params = [];
 
             if ($constructor = $r->getConstructor())
             {
@@ -143,24 +152,25 @@ namespace gdgrid\gd\plugin
                 {
                     if (false == $param->isOptional() && false == $this->checkConfig($componentName, $param->name))
 
-                        throw new \logicException
+                        throw new logicException
 
                         (sprintf('The `%s` config parameter have to be set at first in Grid plugin `%s` component.', $param->name, $componentName));
 
-                    $p[] = $this->checkConfig($componentName, $param->name)
+                    $params[] = $this->checkConfig($componentName, $param->name)
 
                         ? $this->config[$componentName][$param->name] : $param->getDefaultValue();
                 }
             }
 
-            return call_user_func_array([$r, 'newInstance'], $p);
+            return call_user_func_array([$r, 'newInstance'], $params);
         }
 
         /**
          * @param string   $componentName
          * @param callable $fetch
          * @return $this
-         * @throws \ReflectionException
+         * @throws RuntimeException
+         * @throws logicException
          */
         public function fetchComponent(string $componentName, callable $fetch)
         {
