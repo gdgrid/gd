@@ -18,6 +18,7 @@ or connect a separate class that implements the interface itself and pass it to 
 ``Your model Class:``
 
 ```php
+<?php
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
