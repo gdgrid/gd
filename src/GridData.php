@@ -201,10 +201,6 @@ namespace gdgrid\gd
          */
         public function setStorage(string $group, string $key, $data)
         {
-            if (false == isset($this->storage[$group]))
-
-                $this->storage[$group] = [];
-
             $this->storage[$group][$key] = $data;
 
             return $this;
