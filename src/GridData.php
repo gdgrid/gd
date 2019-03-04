@@ -81,7 +81,8 @@ namespace gdgrid\gd
          * Notice: You can specify the field name according to the current application locale name,
          * storing it in JSON format on the column comment.
          *
-         * Example: [[
+         * @example
+         * [[
          *   "Field" => "username",
          *   "Type" => "varchar(255)",
          *   "Collation" => "utf8mb4_unicode_ci",

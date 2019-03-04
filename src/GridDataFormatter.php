@@ -53,11 +53,7 @@ namespace gdgrid\gd
          * Set multiple array of Grid Fields format.
          *
          * @param array $fieldFormats
-         * Example:
-         * [
-         *  [['username', 'email'], ['trim', 'strip_tags']],
-         *  ['character', ['truncate' => 20, 'strip_html']],
-         * ]
+         * @example [ [['username', 'email'], ['trim', 'strip_tags']], ['character', ['truncate' => 20, 'strip_html']] ]
          *
          * @return $this
          * @throws RuntimeException
@@ -101,8 +97,7 @@ namespace gdgrid\gd
          * Set array of formats for all Grid Data Fields.
          *
          * @param array $formats
-         * Example:
-         * ['strip_html', 'truncate' => [20]]
+         * @example ['strip_html', 'truncate' => [20]]
          *
          * @return $this
          */
@@ -128,8 +123,7 @@ namespace gdgrid\gd
          * Attaches array of formats for all Grid Data Fields.
          *
          * @param array $methods
-         * Example:
-         * [[trim, []], ['truncate', [20]], ['strip_tags', []]]
+         * @example [ [trim, []], ['truncate', [20]], ['strip_tags', []] ]
          *
          * @return array
          */

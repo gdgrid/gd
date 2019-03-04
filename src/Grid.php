@@ -291,8 +291,8 @@ namespace gdgrid\gd
         }
 
         /**
-         * Example: bindLayout('{some-key}', ['<template></template>', '<{tag}']) - insert template before tag;
-         * Example: bindLayout('{some-key}', ['<template></template>', null, '</{tag}>']) - insert template after tag;
+         * @example bindLayout('{some-key}', ['<template></template>', '<{tag}']) - insert template before tag;
+         * @example bindLayout('{some-key}', ['<template></template>', null, '</{tag}>']) - insert template after tag;
          *
          * @param string $bindKey
          * @param array  $data
