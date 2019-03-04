@@ -44,7 +44,7 @@ namespace gdgrid\gd
 
         protected $setTypes = ['select', 'checkbox', 'radio', 'file', 'number', 'date', 'time', 'datetime-local'];
 
-        protected $maxTextInputSize = 255;
+        protected $maxLength = 255;
 
         protected $renderSubDirPath = 'form' . DIRECTORY_SEPARATOR . 'form.php';
 
@@ -123,7 +123,7 @@ namespace gdgrid\gd
                 {
                     if (false == array_key_exists($k, $sizes))
 
-                        $sizes[$k] = $this->maxTextInputSize;
+                        $sizes[$k] = $this->maxLength;
 
                     continue;
                 }
@@ -219,7 +219,7 @@ namespace gdgrid\gd
 
                 $size = intval($this->getInputAttributes($k)['maxlength'] ?? $size);
 
-                if ($size > $this->maxTextInputSize)
+                if ($size > $this->maxLength)
 
                     $this->setTextarea($k);
 
@@ -229,9 +229,9 @@ namespace gdgrid\gd
             return $this;
         }
 
-        public function setMaxTextInputSize(int $max)
+        public function setMaxLength(int $max)
         {
-            $this->maxTextInputSize = $max;
+            $this->maxLength = $max;
 
             return $this;
         }
