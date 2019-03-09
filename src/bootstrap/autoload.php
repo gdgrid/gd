@@ -1,6 +1,6 @@
 <?php
 /***
- *  Package autoloader. If you do not use composer autoloader,
+ *  Package autoloader. If you do not use composer autoloader in your project,
  *  then include this file to your application`s initialization file.
  **/
 spl_autoload_register(function($className)
