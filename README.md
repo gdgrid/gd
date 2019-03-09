@@ -9,7 +9,31 @@ or connect a separate class that implements the interface itself and pass it to 
 
 # Install
 
-``composer require gdgrid/gd``
+````composer require gdgrid/gd````
+
+If you want to run the test application (included in the "testapp" folder of the Library), therefor you will 
+have to install all necessary dependencies from composer.json:
+
+````
+{
+  "require": {
+    "gdgrid/gd": "dev-master"
+  },
+  "require-dev": {
+    "illuminate/database": "5.7",
+    "illuminate/filesystem": "5.7",
+    "illuminate/translation": "5.7",
+    "illuminate/validation": "5.7",
+    "symfony/var-dumper": "^4.1",
+    "seytar/php-router": "dev-master"
+  },
+  "autoload": {
+    "classmap": [
+      "testapp/models/"
+    ]
+  }
+}
+````
 
 # Usage example
 
