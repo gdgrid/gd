@@ -11,8 +11,6 @@ spl_autoload_register(function($className)
 
         $cn = array_pop($path);
 
-        $path = array_slice($path, 1);
-
         $file = dirname(dirname(__FILE__))
             . DIRECTORY_SEPARATOR
             . ($path ? join(DIRECTORY_SEPARATOR, $path) . DIRECTORY_SEPARATOR : '')
