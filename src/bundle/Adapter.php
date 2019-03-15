@@ -87,7 +87,7 @@ namespace gdgrid\gd\bundle
          *
          * @return $this
          */
-        final private function setConnector(?IConnector $connector)
+        final private function setConnector(IConnector $connector = null)
         {
             $this->connector = $connector ?? $this->fetchConnector();
             
