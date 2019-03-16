@@ -13,8 +13,27 @@
 
 namespace gdgrid\gd\bundle
 {
+    use gdgrid\gd\bundle\connectors\GridConnector;
+
+    use gdgrid\gd\GridData;
+
+    use PDO;
+
+    /**
+     * show off @property, @property-read, @property-write
+     * @mixin GridConnector;
+     * */
     class Grid extends Adapter
     {
         use TAdapter;
+
+        public function fetchDataProvider(PDO $pdo, string $dataTable, string $locale = null)
+        {
+            $provider = (new GridData)->setPdo($pdo)->setTable($dataTable);
+
+            if ($locale) $provider->setLocale($locale);
+
+            return $provider;
+        }
     }
 }

@@ -9,6 +9,7 @@ use gdgrid\gd\GridData;
 use gdgrid\gd\GridForm;
 use Illuminate\Http\Request;
 use gdgrid\gd\Grid;
+use gdgrid\gd\bundle\Grid as BundleGrid;
 
 $provider = new User;
 
@@ -68,6 +69,15 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
         ]);
 
     $table = (new GridTable($dataProvider))->loadColumns();
+
+    # Use of the Grid Bundle simplifies all initializations, produced above in a single line:
+    #
+    # $table = BundleGrid::setProvider($provider)->setDataProvider(DB::capsule()->getConnection()->getPdo(), 'users')
+    #     ->mergeData([
+    #        'inputOptions' => [
+    #            'gender' => ['FEMALE', 'MALE']
+    #        ]
+    #     ])->table();
 
     $table->plugin()->setConfig('bulk-actions', ['view' => false, 'set_query' => false]);
 

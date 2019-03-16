@@ -9,7 +9,7 @@ namespace gdgrid\gd\bundle
     {
         public function fetchConnector(): IConnector
         {
-            $conn =  '\\gdgrid\\gd\\connect\\connectors\\' . substr(strrchr(__CLASS__, "\\"), 1) . 'Connector';
+            $conn =  '\\gdgrid\\gd\\bundle\\connectors\\' . substr(strrchr(__CLASS__, "\\"), 1) . 'Connector';
 
             return new $conn;
         }
