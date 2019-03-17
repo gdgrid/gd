@@ -187,6 +187,9 @@ use gdgrid\gd\GridTable;
 use gdgrid\gd\GridDataProvider;
 use gdgrid\gd\GridData;
 use gdgrid\gd\GridForm;
+use Illuminate\Http\Request;
+use gdgrid\gd\Grid;
+use gdgrid\gd\bundle\Grid as BundleGrid;
 
 $provider = new User;
 
@@ -220,7 +223,7 @@ $table = (new GridTable($dataProvider))->loadColumns();
 
 $table->plugin()->setConfig('bulk-actions', ['view' => false, 'set_query' => false]);
 
-$table->plugin()->hook('filter', function(GridForm $plugin)
+$table->plugin()->hook('filter', function(GridForm $plugin, Grid $grid)
 {
     $plugin->loadInputs()->setValues(Request::capture()->all());
 });
