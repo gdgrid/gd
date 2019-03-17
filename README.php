@@ -1,48 +1,47 @@
-# Grid-Data
-The PHP 7 Grid-Data Library.
-
-The main purpose of the Library is to automatically generate tables, forms and representations of certain entities in the views.
-If the form and column field settings of the entity are not specified, then these settings are taken from the column types and their names in the database table.
-
-For all this, you need to implement a specific interface in the entity itself,
-or connect a separate class that implements the interface itself and pass it to the generator.
-
-# Install
-
-````composer require gdgrid/gd````
-
-If you want to run the test application (included in the "testapp" folder of the Library), therefor you will 
-have to install all necessary dependencies from composer.json:
-
-````
-{
-  "require": {
-    "gdgrid/gd": "dev-master"
-  },
-  "require-dev": {
-    "illuminate/database": "5.7",
-    "illuminate/filesystem": "5.7",
-    "illuminate/translation": "5.7",
-    "illuminate/validation": "5.7",
-    "symfony/var-dumper": "^4.1",
-    "seytar/php-router": "dev-master"
-  },
-  "autoload": {
-    "classmap": [
-      "testapp/models/"
-    ]
-  }
-}
-````
-
-# Usage example
-
-**1. Using Entity itself.**
-
-``Your model Class:``
-
-```php
 <?php
+
+# Grid-Data
+# The PHP 7 Grid-Data Library.
+
+# The main purpose of the Library is to automatically generate tables, forms and representations
+# of certain entities in the views.
+# If the form and column field settings of the entity are not specified,
+# then these settings are taken from the column types and their names in the database table.
+#
+# For all this, you need to implement a specific interface in the entity itself,
+# or connect a separate class that implements the interface itself and pass it to the generator.
+
+# INSTALL
+
+# composer require gdgrid/gd
+
+# If you want to run the test application (included in the "testapp" folder of the Library), therefor you will
+# have to install all necessary dependencies from composer.json:
+
+# {
+#   "require": {
+#     "gdgrid/gd": "dev-master"
+#   },
+#   "require-dev": {
+#     "illuminate/database": "5.7",
+#     "illuminate/filesystem": "5.7",
+#     "illuminate/translation": "5.7",
+#     "illuminate/validation": "5.7",
+#     "symfony/var-dumper": "^4.1",
+#     "seytar/php-router": "dev-master"
+#   },
+#   "autoload": {
+#     "classmap": [
+#       "testapp/models/"
+#     ]
+#   }
+# }
+
+######## USAGE EXAMPLE ########
+
+# 1. Using Entity itself.
+
+# Your model Class:
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
@@ -120,12 +119,7 @@ class User extends Eloquent implements IGridFormProvider, IGridTableProvider
     }
 }
 
-```
-
-``View File:``
-
-```php
-<?php
+######## View File: ########
 
 use gdgrid\gd\GridTable;
 use gdgrid\gd\GridForm;
@@ -152,16 +146,11 @@ $table->setProviderItems($items)->setCell('image', function($data)
 
 echo $table->render();
 
-```
+######## 2. USING DATA PROVIDER. ########
 
-**2. Using Data Provider.**
+# In this case it is not neccessary to implement interfaces in your entity class.
 
-``In this case it is not neccessary to implement interfaces in your entity class.``
-
-``Your model Class:``
-
-```php
-<?php
+# Your model Class:
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
@@ -176,12 +165,7 @@ class User extends Eloquent
     ... 
 }
 
-```
-
-``View File:``
-
-```php
-<?php
+######## View File: ########
 
 use gdgrid\gd\GridTable;
 use gdgrid\gd\GridDataProvider;
@@ -248,7 +232,5 @@ $table->setProviderItems($items)->setCell('image', function($data)
 
 echo $table->render();
 
-```
-
-The full code of the represented examples you can find in the "testapp" directory of the Library.
-Just copy/paste files to the document root of your application.
+# The full code of the represented examples you can find in the "testapp" directory of the Library.
+# Just copy/paste files to the document root of your application.

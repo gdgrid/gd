@@ -495,5 +495,10 @@ namespace gdgrid\gd
 
             return ob_get_clean();
         }
+
+        public function __toString()
+        {
+            return $this->render();
+        }
     }
 }
