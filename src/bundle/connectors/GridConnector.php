@@ -15,15 +15,14 @@
 namespace gdgrid\gd\bundle\connectors
 {
 
-    use gdgrid\gd\bundle\IConnector;
     use gdgrid\gd\IGridFormProvider;
     use gdgrid\gd\IGridProvider;
     use gdgrid\gd\IGridTableProvider;
+    use gdgrid\gd\GridDataProvider;
     use gdgrid\gd\GridForm;
     use gdgrid\gd\GridTable;
     use gdgrid\gd\GridView;
     use gdgrid\gd\bundle\Grid;
-    use gdgrid\gd\GridDataProvider;
     use PDO;
     use RuntimeException;
 
@@ -47,8 +46,6 @@ namespace gdgrid\gd\bundle\connectors
         protected $form;
 
         protected $view;
-
-        protected $attachAssets = true;
 
         public function setProvider($provider)
         {
@@ -105,21 +102,6 @@ namespace gdgrid\gd\bundle\connectors
             return $this;
         }
 
-        protected function checkProvider()
-        {
-            if ($this->dataProvider === null && false === $this->provider instanceof IGridProvider)
-
-                throw new RuntimeException(
-
-                    'The "provider" entity must implement both `gdgrid\gd\IGridFormProvider` or `gdgrid\gd\IGridTableProvider` 
-                    
-                    interfaces or set "dataProvider" instead of that.');
-
-            if ($this->provider === null || get_class($this->provider) === false)
-
-                throw new RuntimeException('The "provider" property must be a valid class object.');
-        }
-
         /**
          * @return GridTable
          */
@@ -144,11 +126,19 @@ namespace gdgrid\gd\bundle\connectors
             return (new GridView($this->fetchDataProvider()));
         }
 
-        public function detachAssets()
+        protected function checkProvider()
         {
-            $this->attachAssets = false;
+            if ($this->dataProvider === null && false === $this->provider instanceof IGridProvider)
 
-            return $this;
+                throw new RuntimeException(
+
+                    'The "provider" entity must implement both `gdgrid\gd\IGridFormProvider` or `gdgrid\gd\IGridTableProvider` 
+                    
+                    interfaces or set "dataProvider" instead of that.');
+
+            if ($this->provider === null || get_class($this->provider) === false)
+
+                throw new RuntimeException('The "provider" property must be a valid class object.');
         }
 
         protected function getProviderData($provider)

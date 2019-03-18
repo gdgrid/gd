@@ -72,12 +72,12 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     # Use of the Grid Bundle simplifies all initializations, produced above in a single line:
     #
-    # $table = BundleGrid::setProvider($provider)->setDataProvider(DB::capsule()->getConnection()->getPdo(), 'users')
-    #     ->mergeData([
-    #        'inputOptions' => [
-    #            'gender' => ['FEMALE', 'MALE']
-    #        ]
-    #     ])->table();
+     $table = BundleGrid::setProvider($provider)->setDataProvider(DB::capsule()->getConnection()->getPdo(), 'users')
+         ->mergeData([
+            'inputOptions' => [
+                'gender' => ['FEMALE', 'MALE']
+            ]
+         ])->setAssetBundle("")->table();
 
     $table->plugin()->setConfig('bulk-actions', ['view' => false, 'set_query' => false]);
 

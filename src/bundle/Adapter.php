@@ -13,7 +13,9 @@
 
 namespace gdgrid\gd\bundle
 {
-    
+
+    use gdgrid\gd\bundle\connectors\IConnector;
+
     /**
      * show off @property, @property-read, @property-write
      * @property IConnector $connector;

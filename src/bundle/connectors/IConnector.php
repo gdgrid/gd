@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface IAdapter
+ * Interface IConnector
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -11,8 +11,10 @@
  * @github          https://github.com/gdgrid/gd
  */
 
-namespace gdgrid\gd\bundle
+namespace gdgrid\gd\bundle\connectors
 {
+    use gdgrid\gd\bundle\Adapter;
+
     interface IConnector
     {
         public function init();

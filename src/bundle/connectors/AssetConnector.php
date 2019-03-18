@@ -14,13 +14,21 @@
 namespace gdgrid\gd\bundle\connectors
 {
 
-    use gdgrid\gd\bundle\IConnector;
-
     /**
      * show off @property, @property-read, @property-write
      * */
     class AssetConnector implements IConnector
     {
         use TConnector;
+
+        public function prepend()
+        {
+
+        }
+
+        public function append()
+        {
+
+        }
     }
 }

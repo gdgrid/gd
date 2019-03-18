@@ -11,8 +11,12 @@ $this->setConfig('filter', [
     'buttons'   => [
         'submit'   => ['url' => null, 'id' => null, 'attr' => null, 'onclick' => null, 'text' => 'Apply Filter'],
         'reset'    => ['url' => null, 'id' => null, 'attr' => null, 'onclick' => null, 'text' => 'Reset Filter'],
-        'template' => null // '{submit} {reset}'
-    ]
+        'template' => null, // '{submit} {reset}'
+        'insert_before' => '<{tag}',
+        'insert_after' => null,
+    ],
+    'insert_before' => null,
+    'insert_after' => '{columns}',
 ]);
 
 $this->fetchComponent('filter', function(GridForm $plugin, Grid $grid)
@@ -120,9 +124,13 @@ $this->fetchComponent('filter', function(GridForm $plugin, Grid $grid)
                 'onkeydown' => sprintf('if (event.keyCode === 13) $(\'#%s\').trigger(\'click\')', $btn['submit']['id'])
             ]);
 
-        $grid->bindLayout('{filter_btn}', [$template, '<{tag}']);
+        $grid->bindLayout('{filter_btn}', [$template, $buttons['insert_before'], $buttons['insert_after']]);
     }
 
-    $grid->bindLayout('{filter}', [$plugin->render(), null, '{columns}']);
+    $grid->bindLayout('{filter}', [
+        $plugin->render(),
+        $this->getConfig('filter', 'insert_before'),
+        $this->getConfig('filter', 'insert_after')
+    ]);
 
 });
