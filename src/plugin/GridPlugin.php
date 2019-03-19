@@ -14,7 +14,9 @@
 namespace gdgrid\gd\plugin
 {
     use gdgrid\gd\Grid;
+
     use RuntimeException;
+
     use logicException;
 
     /**
@@ -133,7 +135,7 @@ namespace gdgrid\gd\plugin
          * @throws RuntimeException
          * @throws logicException
          */
-        protected function getComponentInstance(string $componentName)
+        protected function fetchComponentInstance(string $componentName)
         {
             try
             {
@@ -180,7 +182,7 @@ namespace gdgrid\gd\plugin
 
             $instance = $this->components[$componentName] === get_class($this->gridObject)
 
-                ? $this->gridObject : $this->getComponentInstance($componentName);
+                ? $this->gridObject : $this->fetchComponentInstance($componentName);
 
             if (isset($this->hook[$componentName]))
             {
