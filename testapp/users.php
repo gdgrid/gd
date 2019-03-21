@@ -107,7 +107,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
         return $data->image ? '<img src="' . $data->image . '" />' : null;
     });
 
-//    BundleGrid::adapter()->restore();
+//    BundleGrid::capture()->restore();
 
 //    dump(BundleGrid::capture());
 

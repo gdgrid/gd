@@ -189,11 +189,9 @@ namespace gdgrid\gd\bundle
          */
         final static function __callStatic(string $m, array $arg = [])
         {
-            $call = get_called_class();
+            $class = get_called_class();
 
-            $instance = static::$capture[$call] ?? new $call;
-
-            return $instance->callConnector($m, $arg);
+            return (new $class)->callConnector($m, $arg);
         }
     }
 }
