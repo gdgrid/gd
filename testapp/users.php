@@ -53,31 +53,31 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     $t = microtime(true);
 
-    $dataProvider = (new GridDataProvider($provider))
-        ->setDataProvider((new GridData)
-            ->setPdo(DB::capsule()->getConnection()->getPdo())
-            ->setTable('users')
-            ->setLocale('en'))
-        ->fetchData()
-        ->setData([
-            'safeFields'   => [
-                'id',
-            ],
-            'inputOptions' => [
-                'gender' => ['Female', 'Male']
-            ]
-        ]);
-
-    $table = (new GridTable($dataProvider))->loadColumns();
+//    $dataProvider = (new GridDataProvider($provider))
+//        ->setDataProvider((new GridData)
+//            ->setPdo(DB::capsule()->getConnection()->getPdo())
+//            ->setTable('users')
+//            ->setLocale('en'))
+//        ->fetchData()
+//        ->setData([
+//            'safeFields'   => [
+//                'id',
+//            ],
+//            'inputOptions' => [
+//                'gender' => ['Female', 'Male']
+//            ]
+//        ]);
+//
+//    $table = (new GridTable($dataProvider))->loadColumns();
 
     # Use of the Grid Bundle simplifies all initializations, produced above in a single line:
     #
-     $table = BundleGrid::setProvider($provider)->setDataProvider(DB::capsule()->getConnection()->getPdo(), 'users')
+     $table = BundleGrid::capture()->store()->setProvider($provider)->setDataProvider(DB::capsule()->getConnection()->getPdo(), 'users')
          ->mergeData([
             'inputOptions' => [
                 'gender' => ['FEMALE', 'MALE']
             ]
-         ])->setAssetBundle("")->table();
+         ])->table();
 
     $table->plugin()->setConfig('bulk-actions', ['view' => false, 'set_query' => false]);
 
@@ -106,6 +106,10 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
     {
         return $data->image ? '<img src="' . $data->image . '" />' : null;
     });
+
+//    BundleGrid::adapter()->restore();
+
+//    dump(BundleGrid::capture());
 
     echo $table->render();
 

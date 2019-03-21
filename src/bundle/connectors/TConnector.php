@@ -35,18 +35,5 @@ namespace gdgrid\gd\bundle\connectors
         {
             return $this->adapter;
         }
-
-        public function render(array $params = [])
-        {
-            foreach ($params as $k => $v) $$k = $v;
-
-            unset($params);
-
-            ob_start();
-
-            include(__DIR__ . '/render/' . trim(strtolower(preg_replace('/([A-Z])/', '-$1', __CLASS__)), '-') . '.php');
-
-            return ob_get_clean();
-        }
     }
 }

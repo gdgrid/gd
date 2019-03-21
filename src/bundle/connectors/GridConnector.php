@@ -107,7 +107,7 @@ namespace gdgrid\gd\bundle\connectors
          */
         public function table()
         {
-            return (new GridTable($this->fetchDataProvider()))->loadColumns();
+            return $this->table ?? $this->table = (new GridTable($this->fetchDataProvider()))->loadColumns();
         }
 
         /**
@@ -115,7 +115,7 @@ namespace gdgrid\gd\bundle\connectors
          */
         public function form()
         {
-            return (new GridForm($this->fetchDataProvider()))->loadInputs();
+            return $this->form ?? $this->form = (new GridForm($this->fetchDataProvider()))->loadInputs();
         }
 
         /**
@@ -123,7 +123,7 @@ namespace gdgrid\gd\bundle\connectors
          */
         public function view()
         {
-            return (new GridView($this->fetchDataProvider()));
+            return $this->view ?? $this->view = new GridView($this->fetchDataProvider());
         }
 
         protected function checkProvider()
