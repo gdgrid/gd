@@ -53,20 +53,23 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     $t = microtime(true);
 
-    $dataProvider = (new GridDataProvider($provider))
-        ->setDataProvider((new GridData)
-            ->setPdo(DB::capsule()->getConnection()->getPdo())
-            ->setTable('users')
-            ->setLocale('en'))
-        ->fetchData()
-        ->mergeData([
-            'safeFields'   => [
-                'id',
-            ],
-            'inputOptions' => [
-                'gender' => ['Female', 'Male']
-            ]
-        ]);
+    $dataProvider = new GridDataProvider($provider);
+
+    $dataProvider->setDataProvider((new GridData)
+        ->setPdo(DB::capsule()->getConnection()->getPdo())
+        ->setTable('users')
+        ->setLocale('en'));
+
+    $dataProvider->fetchData();
+
+    $dataProvider->mergeData([
+        'safeFields'   => [
+            'id',
+        ],
+        'inputOptions' => [
+            'gender' => ['Female', 'Male']
+        ]
+    ]);
 
     $table = (new GridTable($dataProvider))->loadColumns();
 

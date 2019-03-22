@@ -52,14 +52,13 @@ namespace gdgrid\gd
          * GridDataProvider constructor.
          *
          * @param object $entity
-         * @param bool $mergeData
          * @throws RuntimeException
          */
-        public function __construct($entity, bool $mergeData = true)
+        public function __construct($entity)
         {
             $this->setEntity($entity);
 
-            if ($mergeData) $this->mergeData([]);
+            $this->mergeData([]);
         }
 
         final function setDataProvider(IGridData $provider)
@@ -189,23 +188,15 @@ namespace gdgrid\gd
             {
                 $this->data['fields'][$field['field']] = $field['name'];
 
-                if ($field['type'] === GridForm::DEFAULT_INPUT_TYPE)
-
-                    $field['type'] = 'textarea';
+                if ($field['type'] === GridForm::DEFAULT_INPUT_TYPE) $field['type'] = 'textarea';
 
                 $this->data['inputTypes'][$field['field']] = $field['type'];
 
-                if (false == empty($field['size']))
+                if (false == empty($field['size'])) $this->data['inputSizes'][$field['field']] = $field['size'];
 
-                    $this->data['inputSizes'][$field['field']] = $field['size'];
+                if (false == empty($field['prompt'])) $this->data['inputPrompts'][$field['field']] = $field['prompt'];
 
-                if (false == empty($field['prompt']))
-
-                    $this->data['inputPrompts'][$field['field']] = $field['prompt'];
-
-                if (false == empty($field['required']))
-
-                    $this->data['requiredFields'][] = $field['field'];
+                if (false == empty($field['required'])) $this->data['requiredFields'][] = $field['field'];
 
                 $this->fetchDataField($field);
             }
