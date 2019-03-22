@@ -213,7 +213,7 @@ namespace gdgrid\gd\plugin
 
         /**
          * @param string $componentName
-         * @param        $instance
+         * @param  object $instance
          * @return $this
          * @throws RuntimeException
          */
@@ -283,6 +283,11 @@ namespace gdgrid\gd\plugin
         static function getDirComponents()
         {
             return trim(str_replace('\\', '/', static::$dirComponents), '/') . '/';
+        }
+
+        public function __sleep()
+        {
+            $this->hook = [];
         }
     }
 }

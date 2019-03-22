@@ -40,7 +40,7 @@ namespace gdgrid\gd\bundle
         protected static $capture = [];
 
         /**
-         * The current Adapter`s instance time to store in seconds.
+         * The storage time in seconds of the current Adapter instance.
          */
         protected $storeTime;
 
@@ -57,14 +57,14 @@ namespace gdgrid\gd\bundle
         }
 
         /**
-         * Retrieves a new instance of the current Adapter`s Connector Class.
+         * Retrieve a new instance of the current Adapter`s Connector Class.
          *
          * @return IConnector
          */
         abstract function fetchConnector(): IConnector;
 
         /**
-         * Deserialize the current Adapter`s instance from any available storage (File Cache as defaults).
+         * Deserialization of the current Adapter`s instance from any available storage (File Cache as defaults).
          *
          * @return null|Adapter
          */
@@ -80,8 +80,8 @@ namespace gdgrid\gd\bundle
         abstract function checkStoreOutdated(): bool;
 
         /**
-         * Serializes the current Adapter`s instance and puts it in any available storage (File Cache as defaults)
-         * for a certain time, for further quick access to the already processed data.
+         * Serialization of the current Adapter`s instance and putting it into any available storage (File Cache as defaults)
+         * for further quick access to the already processed data.
          *
          * @param int $time
          *
@@ -165,7 +165,7 @@ namespace gdgrid\gd\bundle
 
             if (null === $this->connector)
 
-                $this->setConnector(null);
+                $this->setConnector();
 
             return call_user_func_array([$this->connector, $m], $arg);
         }

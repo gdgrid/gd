@@ -218,5 +218,15 @@ namespace gdgrid\gd
         {
             return $this->cellRowTemplate['index'][$index] ?? $this->cellRowTemplate['base'];
         }
+
+        public function __sleep()
+        {
+            parent::__sleep();
+
+            foreach ($this->cell as $key => $cell)
+            {
+                if (is_callable($cell)) unset($this->cell[$key]);
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 <?php
 /**
  * Class GridDataProvider
+ *
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -13,12 +14,12 @@
 
 namespace gdgrid\gd
 {
+
     use RuntimeException;
 
     class GridDataProvider implements IGridFormProvider, IGridTableProvider
     {
-        protected $data = [
-            'items'            => null,
+        const DATA_STATEMENT = [
             'fields'           => [],
             'safeFields'       => [],
             'requiredFields'   => [],
@@ -30,25 +31,35 @@ namespace gdgrid\gd
             'tableCellPrompts' => [],
         ];
 
-        /*
+        protected $data = [];
+
+        /**
          * IGridData Provider
-         * */
+         **/
         protected $dataProvider;
 
-        /*
+        /**
          * Data Object
-         * */
+         **/
         protected $entity;
+
+        /**
+         * Array of Data Objects
+         **/
+        protected $entityItems;
 
         /**
          * GridDataProvider constructor.
          *
          * @param object $entity
+         * @param bool $mergeData
          * @throws RuntimeException
          */
-        public function __construct($entity)
+        public function __construct($entity, bool $mergeData = true)
         {
             $this->setEntity($entity);
+
+            if ($mergeData) $this->mergeData([]);
         }
 
         final function setDataProvider(IGridData $provider)
@@ -97,33 +108,79 @@ namespace gdgrid\gd
 
         public function getItems()
         {
-            return $this->data['items'];
+            return $this->entityItems;
         }
 
         public function setItems(array $items)
         {
-            $this->data['items'] = $items;
+            $this->entityItems = $items;
 
             return $this;
         }
 
         public function checkData(string $key)
         {
-            if (false == array_key_exists($key, $this->data))
+            if (false == array_key_exists($key, self::DATA_STATEMENT))
 
                 throw new RuntimeException(sprintf('The data key `%s` is not found in GridDataProvider.', $key));
         }
 
-        public function setData(array $data)
+        protected function checkDataKeys(array $data)
         {
-            foreach ($data as $key => $value)
+            foreach (array_keys($data) as $key)
             {
                 $this->checkData($key);
-
-                $this->data[$key] = is_array($value) ? array_merge((array) $this->data[$key], $value) : $value;
             }
+        }
+
+        public function setData(array $data)
+        {
+            $this->checkDataKeys($data);
+
+            $this->data = array_merge(self::DATA_STATEMENT, $data);
 
             return $this;
+        }
+
+        public function mergeData(array $data)
+        {
+            $this->checkDataKeys($data);
+
+            $this->data = array_merge(self::DATA_STATEMENT, $this->getEntityData($this->entity), $data);
+
+            return $this;
+        }
+
+        public function replaceData(array $data)
+        {
+            $this->mergeData($data);
+
+            foreach ($data as $k => $v) $this->data[$k] = $v;
+
+            return $this;
+        }
+
+        protected function getEntityData($entity)
+        {
+            $data = [];
+
+            if ($entity instanceof IGridFormProvider)
+
+                $data = [
+                    'fields'       => $entity->gridFields(),
+                    'safeFields'   => $entity->gridSafeFields(),
+                    'inputTypes'   => $entity->gridInputTypes(),
+                    'inputSizes'   => $entity->gridInputSizes(),
+                    'inputOptions' => $entity->gridInputOptions(),
+                    'inputPrompts' => $entity->gridInputPrompts(),
+                    'inputErrors'  => $entity->gridInputErrors(),
+                ];
+
+            if ($entity instanceof IGridTableProvider)
+
+                $data['tableCellPrompts'] = $entity->gridTableCellPrompts();
+
+            return $data;
         }
 
         public function fetchData()

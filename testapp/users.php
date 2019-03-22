@@ -53,31 +53,34 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     $t = microtime(true);
 
-//    $dataProvider = (new GridDataProvider($provider))
-//        ->setDataProvider((new GridData)
-//            ->setPdo(DB::capsule()->getConnection()->getPdo())
-//            ->setTable('users')
-//            ->setLocale('en'))
-//        ->fetchData()
-//        ->setData([
-//            'safeFields'   => [
-//                'id',
-//            ],
-//            'inputOptions' => [
-//                'gender' => ['Female', 'Male']
-//            ]
-//        ]);
-//
-//    $table = (new GridTable($dataProvider))->loadColumns();
-
-    # Use of the Grid Bundle simplifies all initializations, produced above in a single line:
-    #
-     $table = BundleGrid::capture()->store()->setProvider($provider)->setDataProvider(DB::capsule()->getConnection()->getPdo(), 'users')
-         ->mergeData([
+    $dataProvider = (new GridDataProvider($provider))
+        ->setDataProvider((new GridData)
+            ->setPdo(DB::capsule()->getConnection()->getPdo())
+            ->setTable('users')
+            ->setLocale('en'))
+        ->fetchData()
+        ->mergeData([
+            'safeFields'   => [
+                'id',
+            ],
             'inputOptions' => [
-                'gender' => ['FEMALE', 'MALE']
+                'gender' => ['Female', 'Male']
             ]
-         ])->table();
+        ]);
+
+    $table = (new GridTable($dataProvider))->loadColumns();
+
+    # Use of the Grid Bundle simplifies all initializations produced above in a single line:
+    #
+    #    $table = BundleGrid::capture() # method "capture" (optional) for create/access the current GridBundle instance`s singleton.
+    #         ->store() # method "store" (optional) for serialization/access the current GridBundle instance.
+    #         ->setProvider($provider)
+    #         ->fetchData(DB::capsule()->getConnection()->getPdo(), 'users')
+    #         ->mergeData([
+    #            'inputOptions' => [
+    #                'gender' => ['FEMALE', 'MALE']
+    #            ]
+    #         ])->table();
 
     $table->plugin()->setConfig('bulk-actions', ['view' => false, 'set_query' => false]);
 
@@ -92,6 +95,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
     # Pagination disabled. To enable it, you must specify quantity of records
     # in the "totalCount" configuration parameter:
     # $table->plugin()->setConfig('pagination', ['totalCount' => ???]);
+
     $table->disableEmbedPlugin('pagination');
 
     # Can Format the table cells content values:
@@ -107,9 +111,9 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
         return $data->image ? '<img src="' . $data->image . '" />' : null;
     });
 
-//    BundleGrid::capture()->restore();
-
-//    dump(BundleGrid::capture());
+    # Serialize changes in the current GridBundle instance:
+    #
+    #   BundleGrid::capture()->restore(3600);
 
     echo $table->render();
 

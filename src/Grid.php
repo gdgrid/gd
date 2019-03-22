@@ -500,5 +500,13 @@ namespace gdgrid\gd
         {
             return $this->render();
         }
+
+        public function __sleep()
+        {
+            foreach ($this->row as $key => $row)
+            {
+                if (is_callable($row)) unset($this->row[$key]);
+            }
+        }
     }
 }

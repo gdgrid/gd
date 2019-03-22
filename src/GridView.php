@@ -45,5 +45,12 @@ namespace gdgrid\gd
         {
             return call_user_func($this->fetch, $data, $index);
         }
+
+        public function __sleep()
+        {
+            parent::__sleep();
+
+            $this->fetch = null;
+        }
     }
 }

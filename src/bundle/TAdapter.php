@@ -93,9 +93,17 @@ namespace gdgrid\gd\bundle
         {
             if ($files = glob(self::STORE_DIR . '/' . self::hashName($name) . '*'))
             {
-                if (sizeof($files) > 1) rsort($files);
+                $file = sizeof($files) > 1 ? array_pop($files) : $files[0];
 
-                return $files[0];
+                if (sizeof($files) > 1)
+                {
+                    for ($i = 0; $i < sizeof($files); ++$i)
+                    {
+                        unlink($files[$i]);
+                    }
+                }
+
+                return $file;
             }
 
             return null;

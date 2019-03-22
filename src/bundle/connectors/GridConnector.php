@@ -15,31 +15,27 @@
 namespace gdgrid\gd\bundle\connectors
 {
 
-    use gdgrid\gd\IGridFormProvider;
-    use gdgrid\gd\IGridProvider;
-    use gdgrid\gd\IGridTableProvider;
+    use gdgrid\gd\GridData;
     use gdgrid\gd\GridDataProvider;
     use gdgrid\gd\GridForm;
     use gdgrid\gd\GridTable;
     use gdgrid\gd\GridView;
     use gdgrid\gd\bundle\Grid;
     use PDO;
-    use RuntimeException;
 
     /**
      * show off @property, @property-read, @property-write
      *
      * @property Grid $adapter;
+     * @property GridDataProvider $dataProvider;
      * */
     class GridConnector implements IConnector
     {
         use TConnector;
 
-        protected $provider;
+        protected $data;
 
         protected $dataProvider;
-
-        protected $data = [];
 
         protected $table;
 
@@ -49,55 +45,52 @@ namespace gdgrid\gd\bundle\connectors
 
         public function setProvider($provider)
         {
-            $this->provider = $provider;
+            $this->dataProvider = new GridDataProvider($provider);
 
             return $this;
         }
 
-        public function setDataProvider(PDO $pdo, string $dataTable, string $locale = null)
+        public function getProvider()
         {
-            $this->dataProvider = $this->adapter->fetchDataProvider($pdo, $dataTable, $locale);
+            return $this->dataProvider;
+        }
+
+        public function fetchData(PDO $pdo, string $dataTable, string $locale = null)
+        {
+            $this->data = $this->adapter->fetchDataProvider($pdo, $dataTable, $locale);
+
+            if ($this->dataProvider instanceof GridDataProvider)
+
+                $this->dataProvider->setDataProvider($this->data)->fetchData();
 
             return $this;
         }
 
-        protected function fetchDataProvider()
+        /**
+         * @return GridData|mixed
+         */
+        public function getData()
         {
-            $this->checkProvider();
-
-            $dataProvider = new GridDataProvider($this->provider);
-
-            if ($this->dataProvider)
-
-                $dataProvider->setDataProvider($this->dataProvider)->fetchData();
-
-            $dataProvider->setData($this->data);
-
-            return $dataProvider;
+            return $this->data;
         }
 
         public function setData(array $data)
         {
-            $this->data = $data;
+            $this->dataProvider->setData($data);
 
             return $this;
         }
 
         public function mergeData(array $data)
         {
-            $this->data = array_merge($this->getProviderData($this->provider), $data);
+            $this->dataProvider->mergeData($data);
 
             return $this;
         }
 
         public function replaceData(array $data)
         {
-            $this->mergeData($data);
-
-            foreach ($data as $k => $v)
-            {
-                if (array_key_exists($k, $this->data)) $this->data[$k] = $v;
-            }
+            $this->dataProvider->replaceData($data);
 
             return $this;
         }
@@ -107,7 +100,7 @@ namespace gdgrid\gd\bundle\connectors
          */
         public function table()
         {
-            return $this->table ?? $this->table = (new GridTable($this->fetchDataProvider()))->loadColumns();
+            return $this->table ?? $this->table = (new GridTable($this->dataProvider))->loadColumns();
         }
 
         /**
@@ -115,7 +108,7 @@ namespace gdgrid\gd\bundle\connectors
          */
         public function form()
         {
-            return $this->form ?? $this->form = (new GridForm($this->fetchDataProvider()))->loadInputs();
+            return $this->form ?? $this->form = (new GridForm($this->dataProvider))->loadInputs();
         }
 
         /**
@@ -123,45 +116,7 @@ namespace gdgrid\gd\bundle\connectors
          */
         public function view()
         {
-            return $this->view ?? $this->view = new GridView($this->fetchDataProvider());
-        }
-
-        protected function checkProvider()
-        {
-            if ($this->dataProvider === null && false === $this->provider instanceof IGridProvider)
-
-                throw new RuntimeException(
-
-                    'The "provider" entity must implement both `gdgrid\gd\IGridFormProvider` or `gdgrid\gd\IGridTableProvider` 
-                    
-                    interfaces or set "dataProvider" instead of that.');
-
-            if ($this->provider === null || get_class($this->provider) === false)
-
-                throw new RuntimeException('The "provider" property must be a valid class object.');
-        }
-
-        protected function getProviderData($provider)
-        {
-            $data = [];
-
-            if ($provider instanceof IGridFormProvider)
-
-                $data = [
-                    'fields'       => $provider->gridFields(),
-                    'safeFields'   => $provider->gridSafeFields(),
-                    'inputTypes'   => $provider->gridInputTypes(),
-                    'inputSizes'   => $provider->gridInputSizes(),
-                    'inputOptions' => $provider->gridInputOptions(),
-                    'inputPrompts' => $provider->gridInputPrompts(),
-                    'inputErrors'  => $provider->gridInputErrors(),
-                ];
-
-            if ($provider instanceof IGridTableProvider)
-
-                $data['tableCellPrompts'] = $provider->gridTableCellPrompts();
-
-            return $data;
+            return $this->view ?? $this->view = new GridView($this->dataProvider);
         }
     }
 }

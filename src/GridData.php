@@ -75,10 +75,10 @@ namespace gdgrid\gd
         /*
          * Current storage.
          *
-         * Used to store and access the Database Tables data, retrieved by PDO Statement
-         * (tables column info, executed query data and etc.);
+         * Used to store and access data retrieved by PDO Statement
+         * (table columns info, executed query results and etc.);
          *
-         * Notice: You can specify the field name according to the current application locale name,
+         * Notice: You can specify the field output name according to the current application locale name,
          * storing it in JSON format on the column comment.
          *
          * @example
@@ -127,7 +127,7 @@ namespace gdgrid\gd
         }
 
         /**
-         * @return PDO
+         * @return PDO|null
          */
         public function getPdo()
         {
@@ -135,7 +135,7 @@ namespace gdgrid\gd
         }
 
         /**
-         * @return string
+         * @return string|null
          */
         public function getDriver()
         {
@@ -231,7 +231,7 @@ namespace gdgrid\gd
 
         /**
          * The magic method for fetching the Grid Data Driver`s prepared SQL Statement,
-         * execute it, put data in storage and return it`s value.
+         * execute it, put data into storage and return it`s value.
          *
          * @param string $method
          * @param array $arg
@@ -327,6 +327,11 @@ namespace gdgrid\gd
         protected function fetchColumnRequired(array $col)
         {
             return $col['required'];
+        }
+
+        public function __sleep()
+        {
+            $this->pdo = $this->driver = null;
         }
     }
 }
