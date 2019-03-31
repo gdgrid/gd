@@ -46,7 +46,7 @@ use gdgrid\gd\GridData;
             ->setTable('users')
             ->setLocale('en'))
         ->fetchData()
-        ->setData([
+        ->mergeData([
             'safeFields'   => [
                 'id',
             ],
