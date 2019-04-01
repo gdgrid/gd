@@ -1,6 +1,7 @@
 <?php
 /**
  * Class GridTable
+ *
  * @project         <The PHP 7 Grid-Data Library>
  * @package         gdgrid/gd
  * @license         MIT License
@@ -17,6 +18,8 @@ namespace gdgrid\gd
     use gdgrid\gd\GridDataFormatter as Format;
 
     use gdgrid\gd\plugin\components\pagination\Pagination;
+
+    use gdgrid\gd\bundle\connectors\AssetConnector;
 
     class GridTable extends Grid
     {
@@ -37,6 +40,7 @@ namespace gdgrid\gd
         protected $columnRowTemplate;
 
         protected $embedPlugins = [
+            'assets'       => AssetConnector::class,
             'bulk-actions' => GridTable::class,
             'filter'       => GridForm::class,
             'pagination'   => Pagination::class,
@@ -48,7 +52,7 @@ namespace gdgrid\gd
          * GridTable constructor.
          *
          * @param IGridTableProvider $provider
-         * @param GridDataFormatter $formatter
+         * @param GridDataFormatter  $formatter
          */
         public function __construct(IGridTableProvider $provider, GridDataFormatter $formatter = null)
         {

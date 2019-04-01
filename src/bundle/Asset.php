@@ -13,6 +13,13 @@
 
 namespace gdgrid\gd\bundle
 {
+    use gdgrid\gd\bundle\connectors\AssetConnector;
+
+    /**
+     * show off @property, @property-read, @property-write
+     *
+     * @mixin AssetConnector;
+     * */
     class Asset extends Adapter
     {
         use TAdapter;

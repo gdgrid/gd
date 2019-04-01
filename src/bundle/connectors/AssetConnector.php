@@ -15,8 +15,6 @@
 namespace gdgrid\gd\bundle\connectors
 {
 
-    use Exception;
-
     /**
      * show off @property, @property-read, @property-write
      * */
@@ -70,16 +68,60 @@ namespace gdgrid\gd\bundle\connectors
             return $this;
         }
 
-        public function find()
+        public function isCompile()
         {
-            if ($this->compile !== true)
+            return $this->compile === true;
+        }
+
+        public function find(callable $getOutputSubDir = null)
+        {
+            if ($this->isCompile() === false)
 
                 return $this;
 
+            for ($i = 0; $i < sizeof($this->sourceDir); ++$i)
+            {
+                $this->scandir($this->sourceDir[$i], function($file, $dir, $depth) use (& $outputSubDir, $getOutputSubDir)
+                {
+                    if ($depth == 1)
+                    {
+                        $outputSubDir = $getOutputSubDir
 
+                            ? call_user_func($getOutputSubDir, $dir) : (new \SplFileInfo($dir))->getMTime();
+
+                        $outputDir = $this->outputDir . '/' . trim($outputSubDir, '/');
+                    }
+                    else
+                    {
+                        $outputDir = $this->outputDir . '/' . trim($outputSubDir, '/') . '/' . ;
+                    }
+
+                });
+            }
+
+            return $this;
         }
 
-        public function filter(string $glob, callable $filter = null)
+        public function scandir(string $dir, callable $handle, int $depth = 0)
+        {
+            if ($files = scandir($dir))
+            {
+                $depth += 1;
+
+                for ($i = 0; $i < sizeof($files); ++$i)
+                {
+                    if ($files[$i] === '.' || $files[$i] === '..')
+
+                        continue;
+
+                    $file = $dir . '/' . $files[$i];
+
+                    is_dir($file) ? $this->scandir($file, $handle, $depth) : call_user_func($handle, $file, $dir, $depth);
+                }
+            }
+        }
+
+        public function filter(callable $filter = null)
         {
 
         }
