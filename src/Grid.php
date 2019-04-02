@@ -327,13 +327,17 @@ namespace gdgrid\gd
 
                     continue;
 
-                if ($before = $data[1] ?? null)
+                $before = $data[1] ?? null;
 
-                    $layout = str_replace($before, $key . $before, $layout);
+                $after = $data[2] ?? null;
 
-                if ($after = $data[2] ?? null)
+                if ($before !== null)
 
-                    $layout = str_replace($after, $after . $key, $layout);
+                    $layout = $before === '' ? $key . $layout : str_replace($before, $key . $before, $layout);
+
+                if ($after !== null)
+
+                    $layout =  $after === '' ? $layout . $key : str_replace($after, $after . $key, $layout);
             }
 
             return strtr($layout, $bind);
@@ -481,6 +485,21 @@ namespace gdgrid\gd
             $this->renderSubDir = 'json';
 
             return $this;
+        }
+
+        public function isHtml()
+        {
+            return $this->renderSubDir === 'html';
+        }
+
+        public function isCli()
+        {
+            return $this->renderSubDir === 'cli';
+        }
+
+        public function isJson()
+        {
+            return $this->renderSubDir === 'json';
         }
 
         public function render()

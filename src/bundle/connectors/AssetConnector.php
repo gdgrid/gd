@@ -38,7 +38,7 @@ namespace gdgrid\gd\bundle\connectors
 
             $this->setSourceDir($sourceDir ?? []);
 
-            $this->setOutputDir($outputDir ?? getenv('DOCUMENT_ROOT') . '/assets');
+            $this->setOutputDir($outputDir ?? 'assets');
         }
 
         /**
@@ -63,7 +63,7 @@ namespace gdgrid\gd\bundle\connectors
          */
         public function setOutputDir(string $dir)
         {
-            $this->outputDir = rtrim($dir, '/');
+            $this->outputDir = getenv('DOCUMENT_ROOT') . '/' . trim($dir, '/');
 
             return $this;
         }
@@ -179,6 +179,11 @@ namespace gdgrid\gd\bundle\connectors
         public function webPath($file)
         {
             return str_replace(getenv('DOCUMENT_ROOT'), '', $file);
+        }
+
+        public function timestamp($assetPath)
+        {
+            return filemtime(getenv('DOCUMENT_ROOT') . '/' . trim($assetPath, '/'));
         }
     }
 }

@@ -7,7 +7,7 @@ use gdgrid\gd\Grid;
 
 $this->setConfig('assets', [
     'sourceDir' => [],
-    'outputDir' => getenv('DOCUMENT_ROOT') . '/gd-assets',
+    'outputDir' => 'gd-assets',
     'prepend'   => [],
     'append'    => [],
 ]);
@@ -33,11 +33,9 @@ $this->fetchComponent('assets', function(AssetConnector $plugin, Grid $grid)
 
         $activePlugin = str_replace($dir . '/', '', $dirName);
 
-        $activePluginDir = is_dir($plugin->getOutputDir() . '/' . $activePlugin)
+        if ($activePluginDir = is_dir($plugin->getOutputDir() . '/' . $activePlugin)
 
-            ? $plugin->getOutputDir() . '/' . $activePlugin : null;
-
-        if ($activePluginDir)
+            ? $plugin->getOutputDir() . '/' . $activePlugin : null)
 
             $plugin->output($activePluginDir, function($file) use ($plugin, & $prepend, & $append)
             {
@@ -63,12 +61,9 @@ $this->fetchComponent('assets', function(AssetConnector $plugin, Grid $grid)
     {
         for ($i = 0; $i < $sz; ++$i)
         {
-            $asset = '/' . trim($prepend[$i], '/');
+            $asset = ltrim($prepend[$i], '/');
 
-            $prependHtml .= '<link rel="stylesheet" href="'
-                . $asset
-                . '?v=' . (filemtime(getenv('DOCUMENT_ROOT') . '/' . $asset))
-                . '">';
+            $prependHtml .= '<link rel="stylesheet" href="/' . $asset . '?v=' . $plugin->timestamp($asset) . '">';
         }
     }
 
@@ -76,16 +71,11 @@ $this->fetchComponent('assets', function(AssetConnector $plugin, Grid $grid)
     {
         for ($i = 0; $i < $sz; ++$i)
         {
-            $asset = '/' . trim($append[$i], '/');
+            $asset = ltrim($append[$i], '/');
 
-            $appendHtml .= '<script src="'
-                . $asset
-                . '?v=' . (filemtime(getenv('DOCUMENT_ROOT') . '/' . $asset))
-                . '"></script>';
+            $appendHtml .= '<script src="/' . $asset . '?v=' . $plugin->timestamp($asset) . '"></script>';
         }
     }
 
-    $grid->bindLayout('{assets}', [$prependHtml, '<{tag']);
-
-    $grid->bindLayout('{/assets}', [$appendHtml, null, '</{tag}>']);
+    $grid->bindLayout('{assets}', [$prependHtml, ''])->bindLayout('{/assets}', [$appendHtml, null, '']);
 });
