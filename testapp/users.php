@@ -134,6 +134,5 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
     ?>
 
 </div>
-<script src="/gd-assets/plugin/filter/filter.js"></script>
 </body>
 </html>

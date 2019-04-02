@@ -22,8 +22,6 @@ namespace gdgrid\gd\bundle\connectors
     {
         use TConnector;
 
-        protected $assets = [];
-
         protected $sourceDir = [];
 
         protected $outputDir;
@@ -32,9 +30,15 @@ namespace gdgrid\gd\bundle\connectors
 
         protected $compileIp = ['127.0.0.1', '::1'];
 
-        public function __construct()
+        protected $skipCompileExt = ['php'];
+
+        public function __construct($sourceDir = null, $outputDir = null)
         {
             $this->compile = in_array(getenv('REMOTE_ADDR'), $this->compileIp);
+
+            $this->setSourceDir($sourceDir ?? []);
+
+            $this->setOutputDir($outputDir ?? getenv('DOCUMENT_ROOT') . '/assets');
         }
 
         /**
@@ -48,15 +52,25 @@ namespace gdgrid\gd\bundle\connectors
             return $this;
         }
 
+        public function getSourceDir()
+        {
+            return $this->sourceDir;
+        }
+
         /**
          * @param string $dir
          * @return $this
          */
         public function setOutputDir(string $dir)
         {
-            $this->outputDir = $dir;
+            $this->outputDir = rtrim($dir, '/');
 
             return $this;
+        }
+
+        public function getOutputDir()
+        {
+            return $this->outputDir;
         }
 
         public function setCompileIp(array $ip)
@@ -79,35 +93,56 @@ namespace gdgrid\gd\bundle\connectors
 
                 return $this;
 
+            $this->outputDir = rtrim($this->outputDir, '/');
+
             for ($i = 0; $i < sizeof($this->sourceDir); ++$i)
             {
-                $this->scandir($this->sourceDir[$i], function($file, $dir, $depth) use (& $outputSubDir, $getOutputSubDir)
+                $this->scandir($this->sourceDir[$i], function($file, $dir) use (
+                    $i,
+                    $getOutputSubDir,
+                    & $outputDir,
+                    & $subDir
+                )
                 {
-                    if ($depth == 1)
+                    $info = pathinfo($file);
+
+                    if (in_array($info['extension'], $this->skipCompileExt))
+
+                        return false;
+
+                    if (false == isset($subDir[$dir]))
                     {
-                        $outputSubDir = $getOutputSubDir
+                        $subDir[$dir] = trim(str_replace($this->sourceDir[$i], '', $dir), '/');
 
-                            ? call_user_func($getOutputSubDir, $dir) : (new \SplFileInfo($dir))->getMTime();
+                        if ($getOutputSubDir)
 
-                        $outputDir = $this->outputDir . '/' . trim($outputSubDir, '/');
+                            $subDir[$dir] = call_user_func($getOutputSubDir, $subDir[$dir]);
                     }
-                    else
+
+                    if (false == isset($outputDir[$dir]))
                     {
-                        $outputDir = $this->outputDir . '/' . trim($outputSubDir, '/') . '/' . ;
+                        $outputDir[$dir] = $this->outputDir . '/' . $subDir[$dir];
+
+                        is_dir($outputDir[$dir]) or mkdir($outputDir[$dir], 0777, true);
                     }
 
+                    $target = $outputDir[$dir] . '/' . $info['basename'];
+
+                    if (false == is_file($target) || (filemtime($file)-filemtime($target)) > 1)
+
+                        copy($file, $target);
+
+                    return true;
                 });
             }
 
             return $this;
         }
 
-        public function scandir(string $dir, callable $handle, int $depth = 0)
+        public function scandir(string $dir, callable $handle, bool $recurse = true)
         {
             if ($files = scandir($dir))
             {
-                $depth += 1;
-
                 for ($i = 0; $i < sizeof($files); ++$i)
                 {
                     if ($files[$i] === '.' || $files[$i] === '..')
@@ -116,19 +151,34 @@ namespace gdgrid\gd\bundle\connectors
 
                     $file = $dir . '/' . $files[$i];
 
-                    is_dir($file) ? $this->scandir($file, $handle, $depth) : call_user_func($handle, $file, $dir, $depth);
+                    is_dir($file) ? ($recurse ? $this->scandir($file, $handle) : false) : call_user_func($handle, $file, $dir);
                 }
             }
         }
 
-        public function filter(callable $filter = null)
+        public function output(string $outputDir = null, callable $filter = null)
         {
+            $assets = [];
 
+            $this->scandir($outputDir ?? $this->outputDir, function($file, $dir) use (& $assets, $filter)
+            {
+                if ($filter)
+                {
+                    if ($item = call_user_func($filter, $file, $dir)) $assets[] = $item;
+
+                    return;
+                }
+
+                $assets[] = $this->webPath($file);
+
+            }, false);
+
+            return $assets;
         }
 
-        public function output()
+        public function webPath($file)
         {
-            return $this->assets;
+            return str_replace(getenv('DOCUMENT_ROOT'), '', $file);
         }
     }
 }
