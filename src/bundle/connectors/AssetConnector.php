@@ -176,12 +176,12 @@ namespace gdgrid\gd\bundle\connectors
             return $assets;
         }
 
-        public function webPath($file)
+        public function webPath(string $file)
         {
             return str_replace(getenv('DOCUMENT_ROOT'), '', $file);
         }
 
-        public function timestamp($assetPath)
+        public function timestamp(string $assetPath)
         {
             return filemtime(getenv('DOCUMENT_ROOT') . '/' . trim($assetPath, '/'));
         }

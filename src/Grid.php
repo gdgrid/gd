@@ -126,8 +126,7 @@ namespace gdgrid\gd
 
         public function setFields(array $data)
         {
-            $this->field = array_merge($this->field, array_diff_key($data, array_flip((array)$this->getProvider()
-                ->gridSafeFields())));
+            $this->field = array_merge($this->field, array_diff_key($data, array_flip((array)$this->getProvider()->gridSafeFields())));
 
             return $this;
         }
@@ -337,7 +336,7 @@ namespace gdgrid\gd
 
                 if ($after !== null)
 
-                    $layout =  $after === '' ? $layout . $key : str_replace($after, $after . $key, $layout);
+                    $layout = $after === '' ? $layout . $key : str_replace($after, $after . $key, $layout);
             }
 
             return strtr($layout, $bind);

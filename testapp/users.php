@@ -39,11 +39,6 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
 
-    <style>
-        .grid-table-filter-submit-buttons button {
-            margin: 20px 5px 20px 0
-        }
-    </style>
 </head>
 <body>
 <div class="container">
