@@ -111,7 +111,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     # Serialize changes in the current GridBundle instance:
     #
-    #   BundleGrid::capture()->restore(3600);
+       BundleGrid::capture()->restore(3600);
 
     echo $table->render();
 
