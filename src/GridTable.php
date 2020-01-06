@@ -91,13 +91,6 @@ namespace gdgrid\gd
             return $this;
         }
 
-        public function replaceColumns(array $order)
-        {
-            $this->setReplaceOrder($order);
-
-            return $this;
-        }
-
         public function unsetColumn(string $key)
         {
             if ($this->checkRow($key))

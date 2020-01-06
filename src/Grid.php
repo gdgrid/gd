@@ -395,42 +395,6 @@ namespace gdgrid\gd
             return $this->sortOrder;
         }
 
-        protected function setReplaceOrder(array $order)
-        {
-            # FIXME have to make work properly in form generator
-
-            $a = $r = [];
-
-            $sort = $this->fetchSortOrder();
-
-            $keys = array_keys($order);
-
-            for ($i = 0; $i < sizeof($sort); ++$i)
-            {
-                for ($ii = 0; $ii < sizeof($keys); ++$ii)
-                {
-                    if ($sort[$i] === $order[$keys[$ii]])
-                    {
-                        $a[] = $keys[$ii];
-
-                        $a[] = $order[$keys[$ii]];
-
-                        $r[$keys[$ii]] = $r[$order[$keys[$ii]]] = true;
-
-                        break;
-                    }
-                }
-
-                if (false == isset($r[$sort[$i]]))
-
-                    $a[] = $sort[$i];
-            }
-
-            $this->setSortOrder($a);
-
-            return $this;
-        }
-
         final function setPlugin(IGridPlugin $plugin = null)
         {
             $this->plugin = $plugin ?? new GridPlugin($this->embedPlugins, $this);
