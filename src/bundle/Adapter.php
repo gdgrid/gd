@@ -66,28 +66,32 @@ namespace gdgrid\gd\bundle
         /**
          * Deserialization of the current Adapter`s instance from any available storage (File Cache as defaults).
          *
+         * @param string $storeKey
+         *
          * @return null|Adapter
          */
-        abstract function getStore();
+        abstract function getStore(string $storeKey);
 
         /**
          * Checks if storage time exceeds maximum allowed limit.
-         *
          * returns "true" if outdated.
+         *
+         * @param string $storeKey
          *
          * @return bool
          */
-        abstract function checkStoreOutdated(): bool;
+        abstract function isStoreOutdated(string $storeKey): bool;
 
         /**
          * Serialization of the current Adapter`s instance and putting it into any available storage (File Cache as defaults)
          * for further quick access to the already processed data.
          *
+         * @param string $storeKey
          * @param int $time
          *
          * @return mixed
          */
-        abstract function setStore(int $time = null);
+        abstract function setStore(string $storeKey, int $time = null);
 
         /**
          * @param IConnector|null $connector
@@ -107,30 +111,34 @@ namespace gdgrid\gd\bundle
          * @param int             $time
          * @param IConnector|null $connector
          *
+         * @param string $storeKey
+         *
          * @return $this
          */
-        final private function store(int $time = self::STORE_TIME, IConnector $connector = null)
+        final public function store(string $storeKey, int $time = self::STORE_TIME, IConnector $connector = null)
         {
-            if (false == $this->checkStoreOutdated() && ($store = $this->getStore()) && $store instanceof Adapter)
+            if (false == $this->isStoreOutdated($storeKey) && ($store = $this->getStore($storeKey)) && $store instanceof Adapter)
 
                 return $store;
 
-            return $this->restore($time, $connector);
+            return $this->restore($storeKey, $time, $connector);
         }
 
         /**
          * @param int             $time
          * @param IConnector|null $connector
          *
+         * @param string $storeKey
+         *
          * @return $this
          */
-        final private function restore(int $time = self::STORE_TIME, IConnector $connector = null)
+        final public function restore(string $storeKey, int $time = self::STORE_TIME, IConnector $connector = null)
         {
             if ($connector or null === $this->connector)
 
                 $this->setConnector($connector);
 
-            $this->setStore($time);
+            $this->setStore($storeKey, $time);
 
             return $this;
         }

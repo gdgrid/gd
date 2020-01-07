@@ -17,21 +17,21 @@ namespace gdgrid\gd\bundle
             return new $conn;
         }
 
-        public function setStore(int $time = null)
+        public function setStore(string $storeKey, int $time = null)
         {
-            return Cache::set(__CLASS__, $this, intval($time ?? $this->storeTime));
+            return Cache::set($storeKey, $this, intval($time ?? $this->storeTime));
         }
 
-        public function getStore()
+        public function getStore(string $storeKey)
         {
-            return Cache::get(__CLASS__);
+            return Cache::get($storeKey);
         }
 
-        public function checkStoreOutdated(): bool
+        public function isStoreOutdated(string $storeKey): bool
         {
             $limit = intval($this->storeMaxTime ?? static::STORE_MAX_TIME);
 
-            $time = Cache::cachedAt(__CLASS__);
+            $time = Cache::cachedAt($storeKey);
 
             return $time === 0 || (time()-$time) > $limit;
         }

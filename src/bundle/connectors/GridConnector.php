@@ -28,6 +28,7 @@ namespace gdgrid\gd\bundle\connectors
      *
      * @property Grid $adapter;
      * @property GridDataProvider $dataProvider;
+     * @property GridData $data;
      * */
     class GridConnector implements IConnector
     {
@@ -45,7 +46,11 @@ namespace gdgrid\gd\bundle\connectors
 
         public function setProvider($provider)
         {
-            $this->dataProvider = $this->dataProvider ?? new GridDataProvider($provider);
+            if (isset($this->dataProvider))
+
+                return $this;
+
+            $this->dataProvider = new GridDataProvider($provider);
 
             return $this;
         }

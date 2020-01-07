@@ -3,17 +3,21 @@
  * @author GD Lab <dev.gdgrid@gmail.com>
  */
 
-use gdgrid\gd\GridTable;
-use gdgrid\gd\GridDataProvider;
-use gdgrid\gd\GridData;
-use gdgrid\gd\GridForm;
-use Illuminate\Http\Request;
-use gdgrid\gd\Grid;
 use gdgrid\gd\bundle\Grid as BundleGrid;
+use gdgrid\gd\Grid;
+use gdgrid\gd\GridData;
+use gdgrid\gd\GridDataProvider;
+use gdgrid\gd\GridForm;
+use gdgrid\gd\GridTable;
+use Illuminate\Http\Request;
 
 $provider = new User;
 
-$items = $provider->filter(Request::capture()->all())->get()->all();
+# The "isStoreOutdated" method checks if the current dataProvider`s instance is outdated in the BundleGrid`s cache:
+
+$items = BundleGrid::capture()->isStoreOutdated('someStoreKey')
+
+    ? $provider->filter(Request::capture()->all())->get()->all() : [];
 
 ?>
 
@@ -68,17 +72,22 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     $table = (new GridTable($dataProvider))->loadColumns();
 
-    # Use of the Grid Bundle simplifies all initializations produced above in a single line:
-    #
-    #    $table = BundleGrid::capture() # method "capture" (optional) for create/access the current GridBundle instance`s singleton.
-    #         ->store() # method "store" (optional) for serialization/access the current GridBundle instance.
-    #         ->setProvider($dataProvider)
-    #         ->fetchData(DB::capsule()->getConnection()->getPdo(), 'users')
-    #         ->mergeData([
-    #            'inputOptions' => [
-    #                'gender' => ['FEMALE', 'MALE']
-    #            ]
-    #         ])->table();
+    if (sizeof($items)) $table->setProviderItems($items);
+
+    # Use of the Bundle Grid simplifies all initializations produced above in a single line:
+    //    $table = BundleGrid::capture() # method "capture" for create/access the BundleGrid`s singleton.
+    //          ->store('someStoreKey') # method "store" (optional) for serialization/access the current GridBundle instance.
+    //          ->setProvider($provider)
+    //          ->fetchData(DB::capsule()->getConnection()->getPdo(), 'users')
+    //          ->mergeData([
+    //              'inputOptions' => [
+    //                  'gender' => ['FEMALE', 'MALE']
+    //              ]
+    //          ])->table();
+
+    # Serialize changes in the current BundleGrid`s instance
+    # (The methods "store/restore" brings ability for further access the dataProvider`s instance from cache):
+    //    if (BundleGrid::capture()->isStoreOutdated('someStoreKey')) BundleGrid::capture()->restore('someStoreKey', 3600);
 
     $table->plugin()->setConfig('bulk-actions', ['view' => false, 'set_query' => false]);
 
@@ -88,30 +97,26 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
     });
 
     # Can Disable the Embedded Plugins:
-    # $table->disableEmbedPlugins();
+    //    $table->disableEmbedPlugins();
 
     # Pagination disabled. To enable it, you must specify quantity of records
     # in the "totalCount" configuration parameter:
-    # $table->plugin()->setConfig('pagination', ['totalCount' => ???]);
+    //    $table->plugin()->setConfig('pagination', ['totalCount' => ???]);
 
     $table->disableEmbedPlugin('pagination');
 
-    # Can Format the table cells content values:
-    # $table->setFormatAll(['truncate' => 5]);
-    # $table->formatter()->mergeFormats([['strtoupper', []]]);
-    # $table->setFormat([
-    #     [['name', 'email'], ['trim', 'strip_tags']],
-    #     ['character', ['strip_html']],
-    # ]);
+    # Can Format the values in the data table cells:
+    //    $table->setFormatAll(['truncate' => 5]);
+    //    $table->formatter()->mergeFormats([['strtoupper', []]]);
+    //    $table->setFormat([
+    //        [['name', 'email'], ['trim', 'strip_tags']],
+    //        ['character', ['strip_html']],
+    //    ]);
 
-    $table->setProviderItems($items)->setCell('image', function($data)
+    $table->setCell('image', function($data)
     {
         return $data->image ? '<img src="' . $data->image . '" />' : null;
     });
-
-    # Serialize changes in the current GridBundle instance:
-    #
-    #   BundleGrid::capture()->restore(3600);
 
     echo $table->render();
 
