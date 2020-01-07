@@ -110,7 +110,7 @@ namespace gdgrid\gd
 
                 return $this->getProvider()->getItems();
 
-            return $this->providerItems;
+            return $this->providerItems ?? [];
         }
 
         public function setProviderItems(array $items)

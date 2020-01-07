@@ -107,7 +107,7 @@ namespace gdgrid\gd
 
         public function getItems()
         {
-            return $this->entityItems;
+            return $this->entityItems ?? [];
         }
 
         public function setItems(array $items)
