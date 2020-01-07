@@ -45,7 +45,7 @@ namespace gdgrid\gd\bundle\connectors
 
         public function setProvider($provider)
         {
-            $this->dataProvider = new GridDataProvider($provider);
+            $this->dataProvider = $this->dataProvider ?? new GridDataProvider($provider);
 
             return $this;
         }

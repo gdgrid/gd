@@ -72,7 +72,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
     #
     #    $table = BundleGrid::capture() # method "capture" (optional) for create/access the current GridBundle instance`s singleton.
     #         ->store() # method "store" (optional) for serialization/access the current GridBundle instance.
-    #         ->setProvider($provider)
+    #         ->setProvider($dataProvider)
     #         ->fetchData(DB::capsule()->getConnection()->getPdo(), 'users')
     #         ->mergeData([
     #            'inputOptions' => [
@@ -111,7 +111,7 @@ $items = $provider->filter(Request::capture()->all())->get()->all();
 
     # Serialize changes in the current GridBundle instance:
     #
-       BundleGrid::capture()->restore(3600);
+    #   BundleGrid::capture()->restore(3600);
 
     echo $table->render();
 
